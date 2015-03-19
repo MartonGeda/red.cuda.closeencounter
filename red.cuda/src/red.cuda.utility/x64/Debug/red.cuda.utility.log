@@ -1,0 +1,43 @@
+﻿Build started 2015.03.19. 0:02:49.
+     1>Project "D:\Work\ELTE\TDK\red.cuda\src\red.cuda.utility\red.cuda.utility.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "x64\Debug\red.cuda.utility.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       AddCudaCompileDeps:
+       Skipping target "AddCudaCompileDeps" because all output files are up-to-date with respect to the input files.
+       AddCudaCompilePropsDeps:
+       Skipping target "AddCudaCompilePropsDeps" because all output files are up-to-date with respect to the input files.
+       CudaBuild:
+       Skipping target "CudaBuild" because all output files are up-to-date with respect to the input files.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\CL.exe /c /ID:\Work\ELTE\TDK\red.cuda\red.type /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include" /Zi /nologo /W3 /WX- /Od /D WIN64 /D _DEBUG /D _CONSOLE /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc100.pdb" /Gd /TP /errorReport:prompt file_util.cpp red_test.cpp tools.cpp
+         tools.cpp
+     1>tools.cpp(81): warning C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\time.inl(112) : see declaration of 'localtime'
+         Generating Code...
+         Compiling...
+         red_test.cpp
+         file_util.cpp
+     1>file_util.cpp(178): warning C4244: '=' : conversion from 'var_t' to 'int32_t', possible loss of data
+         Generating Code...
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\Lib.exe /OUT:"D:\Work\ELTE\TDK\red.cuda\x64\Debug\redutilcu.lib" /NOLOGO x64\Debug\util.cu.obj
+         x64\Debug\file_util.obj
+         x64\Debug\red_test.obj
+         x64\Debug\tools.obj
+         red.cuda.utility.vcxproj -> D:\Work\ELTE\TDK\red.cuda\x64\Debug\redutilcu.lib
+       PostBuildEvent:
+         echo copy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\bin\cudart*.dll" "D:\Work\ELTE\TDK\red.cuda\x64\Debug\"
+         copy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\bin\cudart*.dll" "D:\Work\ELTE\TDK\red.cuda\x64\Debug\"
+         :VCEnd
+         copy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\bin\cudart*.dll" "D:\Work\ELTE\TDK\red.cuda\x64\Debug\"
+         C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\bin\cudart32_55.dll
+         C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\bin\cudart64_55.dll
+                 2 file(s) copied.
+       FinalizeBuildStatus:
+         Deleting file "x64\Debug\red.cuda.utility.unsuccessfulbuild".
+         Touching "x64\Debug\red.cuda.utility.lastbuildstate".
+     1>Done Building Project "D:\Work\ELTE\TDK\red.cuda\src\red.cuda.utility\red.cuda.utility.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.91

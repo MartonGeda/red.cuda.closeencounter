@@ -1,0 +1,9 @@
+2015-02-25 11:50:01 starting C:\Work\ELTE\TDK\red.cuda\x64\Debug\red.cuda.exe
+Command line arguments: 
+-v -ef -cpu -iDir C:\Work\ELTE\TDK\red.cuda\TestRun\InputTest\Debug\TwoBody -p parameters2.txt -ic TwoBody2.txt 
+
+COMPUTERNAME=GEDA
+USERNAME=Márton
+OS=Windows_NT
+
+2015-02-25 11:50:02Total time: 1 s

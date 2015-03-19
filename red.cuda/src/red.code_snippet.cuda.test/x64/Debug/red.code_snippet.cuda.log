@@ -1,0 +1,79 @@
+﻿Build started 2015.03.19. 0:02:52.
+     1>Project "D:\Work\ELTE\TDK\red.cuda\src\red.code_snippet.cuda.test\red.code_snippet.cuda.vcxproj" on node 3 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "x64\Debug\red.code_snippet.cuda.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       AddCudaCompileDeps:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\cl.exe /E /nologo /showIncludes /TP /D__CUDACC__ /DWIN64 /D_DEBUG /D_CONSOLE /D_MBCS /ID:\Work\ELTE\TDK\red.cuda\red.type /ID:\Work\ELTE\TDK\red.cuda\src\red.cuda.utility /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include" /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include" /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\bin" /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include" /I. /FIcuda_runtime.h /c D:\Work\ELTE\TDK\red.cuda\src\red.code_snippet.cuda.test\main.cu 
+       AddCudaCompilePropsDeps:
+       Skipping target "AddCudaCompilePropsDeps" because all output files are up-to-date with respect to the input files.
+       CudaBuild:
+         Compiling CUDA source file main.cu...
+         cmd.exe /C "C:\Users\Márton\AppData\Local\Temp\tmp0883677a5e3b4787a7fc804ba6f51186.cmd"
+         "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\bin\nvcc.exe" -gencode=arch=compute_20,code=\"sm_20,compute_20\" --use-local-env --cl-version 2010 -ccbin "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64"  -ID:\Work\ELTE\TDK\red.cuda\red.type -ID:\Work\ELTE\TDK\red.cuda\src\red.cuda.utility -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include"  -G   --keep-dir x64\Debug -maxrregcount=0  --machine 64 --compile -cudart static  -g   -DWIN64 -D_DEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /Zi /RTC1 /MDd  " -o x64\Debug\main.cu.obj "D:\Work\ELTE\TDK\red.cuda\src\red.code_snippet.cuda.test\main.cu"
+         
+         D:\Work\ELTE\TDK\red.cuda\src\red.code_snippet.cuda.test>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\bin\nvcc.exe" -gencode=arch=compute_20,code=\"sm_20,compute_20\" --use-local-env --cl-version 2010 -ccbin "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64"  -ID:\Work\ELTE\TDK\red.cuda\red.type -ID:\Work\ELTE\TDK\red.cuda\src\red.cuda.utility -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include"  -G   --keep-dir x64\Debug -maxrregcount=0  --machine 64 --compile -cudart static  -g   -DWIN64 -D_DEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /Zi /RTC1 /MDd  " -o x64\Debug\main.cu.obj "D:\Work\ELTE\TDK\red.cuda\src\red.code_snippet.cuda.test\main.cu" 
+     1>D:/Work/ELTE/TDK/red.cuda/src/red.code_snippet.cuda.test/main.cu(40): warning : function "kernel_print_constant_memory" was declared but never referenced
+         
+     1>D:/Work/ELTE/TDK/red.cuda/src/red.code_snippet.cuda.test/main.cu(50): warning : function "kernel_calc_grav_accel_int_mul_of_thread_per_block" was declared but never referenced
+         
+     1>D:/Work/ELTE/TDK/red.cuda/src/red.code_snippet.cuda.test/main.cu(88): warning : function "kernel_calc_grav_accel" was declared but never referenced
+         
+     1>D:/Work/ELTE/TDK/red.cuda/src/red.code_snippet.cuda.test/main.cu(233): warning : function "test_print_position" was declared but never referenced
+         
+     1>D:/Work/ELTE/TDK/red.cuda/src/red.code_snippet.cuda.test/main.cu(40): warning : function "kernel_print_constant_memory" was declared but never referenced
+         
+     1>D:/Work/ELTE/TDK/red.cuda/src/red.code_snippet.cuda.test/main.cu(50): warning : function "kernel_calc_grav_accel_int_mul_of_thread_per_block" was declared but never referenced
+         
+     1>D:/Work/ELTE/TDK/red.cuda/src/red.code_snippet.cuda.test/main.cu(88): warning : function "kernel_calc_grav_accel" was declared but never referenced
+         
+     1>D:/Work/ELTE/TDK/red.cuda/src/red.code_snippet.cuda.test/main.cu(233): warning : function "test_print_position" was declared but never referenced
+         
+     1>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include\thrust/system/cuda/detail/cuda_launch_config.h(159): warning C4267: 'return' : conversion from 'size_t' to 'int', possible loss of data
+                 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include\thrust/system/cuda/detail/cuda_launch_config.h(272) : see reference to function template instantiation 'L thrust::system::cuda::detail::cuda_launch_config_detail::util::round_i<L,size_t>(const L,const R)' being compiled
+                 with
+                 [
+                     L=int,
+                     R=size_t
+                 ]
+     1>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include\thrust/system/cuda/detail/cuda_launch_config.h(317): warning C4267: 'argument' : conversion from 'size_t' to 'int', possible loss of data
+                 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include\thrust/system/cuda/detail/cuda_launch_config.h(338) : see reference to function template instantiation 'size_t thrust::system::cuda::detail::block_size_with_maximum_potential_occupancy<thrust::system::cuda::detail::cuda_launch_config_detail::util::zero_function<T>>(const thrust::system::cuda::detail::function_attributes_t &,const thrust::system::cuda::detail::device_properties_t &,UnaryFunction)' being compiled
+                 with
+                 [
+                     T=unsigned __int64,
+                     UnaryFunction=thrust::system::cuda::detail::cuda_launch_config_detail::util::zero_function<unsigned __int64>
+                 ]
+     1>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include\thrust/system/cuda/detail/cuda_launch_config.h(147): warning C4267: 'return' : conversion from 'size_t' to 'int', possible loss of data
+                 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include\thrust/system/cuda/detail/cuda_launch_config.h(159) : see reference to function template instantiation 'L thrust::system::cuda::detail::cuda_launch_config_detail::util::divide_ri<L,R>(const L,const R)' being compiled
+                 with
+                 [
+                     L=int,
+                     R=size_t
+                 ]
+                 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include\thrust/system/cuda/detail/cuda_launch_config.h(272) : see reference to function template instantiation 'L thrust::system::cuda::detail::cuda_launch_config_detail::util::round_i<L,size_t>(const L,const R)' being compiled
+                 with
+                 [
+                     L=int,
+                     R=size_t
+                 ]
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Work\ELTE\TDK\red.cuda\x64\Debug\red.code_snippet.cuda.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\lib\x64" cudart.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"x64\Debug\red.code_snippet.cuda.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\Work\ELTE\TDK\red.cuda\x64\Debug\red.code_snippet.cuda.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Work\ELTE\TDK\red.cuda\x64\Debug\red.code_snippet.cuda.lib" /MACHINE:X64 x64\Debug\main.cu.obj
+         D:\Work\ELTE\TDK\red.cuda\x64\Debug\redutilcu.lib
+         red.code_snippet.cuda.vcxproj -> D:\Work\ELTE\TDK\red.cuda\x64\Debug\red.code_snippet.cuda.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"D:\Work\ELTE\TDK\red.cuda\x64\Debug\red.code_snippet.cuda.exe;#1" /manifest x64\Debug\red.code_snippet.cuda.exe.intermediate.manifest
+       PostBuildEvent:
+         echo copy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\bin\cudart*.dll" "D:\Work\ELTE\TDK\red.cuda\x64\Debug\"
+         copy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\bin\cudart*.dll" "D:\Work\ELTE\TDK\red.cuda\x64\Debug\"
+         :VCEnd
+         copy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\bin\cudart*.dll" "D:\Work\ELTE\TDK\red.cuda\x64\Debug\"
+         C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\bin\cudart32_55.dll
+         C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\bin\cudart64_55.dll
+                 2 file(s) copied.
+       FinalizeBuildStatus:
+         Deleting file "x64\Debug\red.code_snippet.cuda.unsuccessfulbuild".
+         Touching "x64\Debug\red.code_snippet.cuda.lastbuildstate".
+     1>Done Building Project "D:\Work\ELTE\TDK\red.cuda\src\red.code_snippet.cuda.test\red.code_snippet.cuda.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:17.26

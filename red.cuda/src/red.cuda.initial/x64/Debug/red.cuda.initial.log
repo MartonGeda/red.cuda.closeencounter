@@ -1,0 +1,49 @@
+﻿Build started 2015.03.19. 0:02:52.
+     1>Project "D:\Work\ELTE\TDK\red.cuda\src\red.cuda.initial\red.cuda.initial.vcxproj" on node 2 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "x64\Debug\red.cuda.initial.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       AddCudaCompileDeps:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\cl.exe /E /nologo /showIncludes /TP /D__CUDACC__ /DWIN64 /D_DEBUG /D_CONSOLE /D_MBCS /ID:\Work\ELTE\TDK\red.cuda\red.type /ID:\Work\ELTE\TDK\red.cuda\src\red.cuda /ID:\Work\ELTE\TDK\red.cuda\src\red.cuda.utility /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include" /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\bin" /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include" /I. /FIcuda_runtime.h /c D:\Work\ELTE\TDK\red.cuda\src\red.cuda.initial\main.cu 
+       AddCudaCompilePropsDeps:
+       Skipping target "AddCudaCompilePropsDeps" because all output files are up-to-date with respect to the input files.
+       CudaBuild:
+         Compiling CUDA source file main.cu...
+         cmd.exe /C "C:\Users\Márton\AppData\Local\Temp\tmp966ec6172cc9455f8ac9e3dfe9c06bbb.cmd"
+         "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\bin\nvcc.exe" -gencode=arch=compute_20,code=\"sm_20,compute_20\" --use-local-env --cl-version 2010 -ccbin "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64"  -ID:\Work\ELTE\TDK\red.cuda\red.type -ID:\Work\ELTE\TDK\red.cuda\src\red.cuda -ID:\Work\ELTE\TDK\red.cuda\src\red.cuda.utility -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include"  -G   --keep-dir x64\Debug -maxrregcount=0  --machine 64 --compile -cudart static  -g   -DWIN64 -D_DEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /Zi /RTC1 /MDd  " -o x64\Debug\main.cu.obj "D:\Work\ELTE\TDK\red.cuda\src\red.cuda.initial\main.cu"
+         
+         D:\Work\ELTE\TDK\red.cuda\src\red.cuda.initial>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\bin\nvcc.exe" -gencode=arch=compute_20,code=\"sm_20,compute_20\" --use-local-env --cl-version 2010 -ccbin "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64"  -ID:\Work\ELTE\TDK\red.cuda\red.type -ID:\Work\ELTE\TDK\red.cuda\src\red.cuda -ID:\Work\ELTE\TDK\red.cuda\src\red.cuda.utility -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include"  -G   --keep-dir x64\Debug -maxrregcount=0  --machine 64 --compile -cudart static  -g   -DWIN64 -D_DEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /Zi /RTC1 /MDd  " -o x64\Debug\main.cu.obj "D:\Work\ELTE\TDK\red.cuda\src\red.cuda.initial\main.cu" 
+     1>D:/Work/ELTE/TDK/red.cuda/src/red.cuda.initial/main.cu(90): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>D:/Work/ELTE/TDK/red.cuda/src/red.cuda.initial/main.cu(141): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>D:/Work/ELTE/TDK/red.cuda/src/red.cuda.initial/main.cu(189): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>D:/Work/ELTE/TDK/red.cuda/src/red.cuda.initial/main.cu(237): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>D:/Work/ELTE/TDK/red.cuda/src/red.cuda.initial/main.cu(286): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>D:/Work/ELTE/TDK/red.cuda/src/red.cuda.initial/main.cu(337): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+     1>D:/Work/ELTE/TDK/red.cuda/src/red.cuda.initial/main.cu(387): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\CL.exe /c /ID:\Work\ELTE\TDK\red.cuda\red.type /ID:\Work\ELTE\TDK\red.cuda\src\red.cuda /ID:\Work\ELTE\TDK\red.cuda\src\red.cuda.utility /I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\include" /Zi /nologo /W3 /WX- /Od /D WIN64 /D _DEBUG /D _CONSOLE /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc100.pdb" /Gd /TP /errorReport:prompt util_init.cpp
+         util_init.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Work\ELTE\TDK\red.cuda\x64\Debug\red.cuda.initial.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\lib\x64" cudart.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"x64\Debug\red.cuda.initial.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"D:\Work\ELTE\TDK\red.cuda\x64\Debug\red.cuda.initial.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Work\ELTE\TDK\red.cuda\x64\Debug\red.cuda.initial.lib" /MACHINE:X64 x64\Debug\main.cu.obj
+         x64\Debug\distribution.obj
+         x64\Debug\nebula.obj
+         x64\Debug\util_init.obj
+         D:\Work\ELTE\TDK\red.cuda\x64\Debug\redutilcu.lib
+         red.cuda.initial.vcxproj -> D:\Work\ELTE\TDK\red.cuda\x64\Debug\red.cuda.initial.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"D:\Work\ELTE\TDK\red.cuda\x64\Debug\red.cuda.initial.exe;#1" /manifest x64\Debug\red.cuda.initial.exe.intermediate.manifest
+       PostBuildEvent:
+         echo copy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\bin\cudart*.dll" "D:\Work\ELTE\TDK\red.cuda\x64\Debug\"
+         copy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\bin\cudart*.dll" "D:\Work\ELTE\TDK\red.cuda\x64\Debug\"
+         :VCEnd
+         copy "C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\bin\cudart*.dll" "D:\Work\ELTE\TDK\red.cuda\x64\Debug\"
+         C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\bin\cudart32_55.dll
+         C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\bin\cudart64_55.dll
+                 2 file(s) copied.
+       FinalizeBuildStatus:
+         Deleting file "x64\Debug\red.cuda.initial.unsuccessfulbuild".
+         Touching "x64\Debug\red.cuda.initial.lastbuildstate".
+     1>Done Building Project "D:\Work\ELTE\TDK\red.cuda\src\red.cuda.initial\red.cuda.initial.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:13.47

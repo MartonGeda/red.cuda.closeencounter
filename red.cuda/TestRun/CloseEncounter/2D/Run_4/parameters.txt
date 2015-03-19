@@ -1,0 +1,18 @@
+# lines beginning with # are comments and ignored
+# this is a test file for the red.cuda parameters
+name = Sun and 1000 proto planet
+description = Test to compare the result of code red and of code noname.
+
+integrator = rkf8
+tolerance = 1.0e-12
+
+start_time = 0.0  # year
+length = 5.0e0  # year
+output_interval = 1.0e0 # year
+
+close_encounter = true
+# inner_steps = false
+
+ejection = 100.0 # AU
+hit_centrum = 0.1 # [AU]
+collision_factor = 5.0
