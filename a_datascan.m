@@ -1,7 +1,7 @@
 %%Close encounter data
 clear all
 
-runnum = 1;
+runnum = 8;
 pc_laptop = 'D';            %'D' : pc, 'C' : laptop
 
 currentdir = strcat(pc_laptop,':\Work\ELTE\TDK\red.cuda\TestRun\CloseEncounter\2D\Run_',int2str(runnum),'\');
@@ -12,7 +12,7 @@ if ~strcmp(unique(rawparams.textdata),'CLOSE_ENCOUNTER')
 end
 
 params = rawparams.data(:,1:34);
-delete rawparams
+clear rawparams
 
 t = params(:,1);            %time in days
 d = params(:,2);            %distance in au
@@ -60,6 +60,59 @@ for i=1:length(timeofce)
    end
 end
 
+%% ascii result
 
+runnum = 1;
+pc_laptop = 'D';            %'D' : pc, 'C' : laptop
+
+currentdir = strcat(pc_laptop,':\Work\ELTE\TDK\red.cuda\TestRun\CloseEncounter\2D\Run_',int2str(runnum),'\');
+rawparams = importdata(strcat(currentdir,'D_cpu_ns_as_RKF8_result.txt'));
+
+id = zeros(length(rawparams.textdata),1);
+for i=1:length(rawparams.textdata)
+    id(i) = str2double(rawparams.textdata{i,1});
+end
+
+N = max(unique(id));
+
+params = [id rawparams.data];
+clear id
+clear rawparams
+
+t = params(1:N:end,3);            %time in days
+
+x = zeros(length(t),N);           %x coord
+y = zeros(length(t),N);           %y coord
+z = zeros(length(t),N);           %z coord
+vx = zeros(length(t),N);          %x velocity
+vy = zeros(length(t),N);          %y velocity
+vz = zeros(length(t),N);          %z velocity
+
+for i=1:length(t)
+    if i == 1
+        x(1,1:N) = params(1:N,10);
+        y(1,1:N) = params(1:N,11);
+        z(1,1:N) = params(1:N,12);
+        vx(1,1:N) = params(1:N,13);
+        vy(1,1:N) = params(1:N,14);
+        vz(1,1:N) = params(1:N,15);
+    else
+       x(i,1:N) = params((i-1)*N+1 : i*N,10);
+       y(i,1:N) = params((i-1)*N+1 : i*N,11);
+       z(i,1:N) = params((i-1)*N+1 : i*N,12);
+       vx(i,1:N) = params((i-1)*N+1 : i*N,13);
+       vy(i,1:N) = params((i-1)*N+1 : i*N,14);
+       vz(i,1:N) = params((i-1)*N+1 : i*N,15);
+    end
+end
+
+%%
+for i = 1:length(t)
+        figure();
+        plot(x(i,596),y(i,596),'*');
+        title(sprintf('Positions at time, t = %5.1f day',t(i)));
+        xlabel('x (AU)');
+        ylabel('y (AU)');
+end
 
 

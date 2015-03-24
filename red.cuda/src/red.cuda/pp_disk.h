@@ -37,6 +37,8 @@ public:
 	var_t get_mass_of_star();
 	//! Transforms the system to barycentric reference frame
 	void transform_to_bc(bool verbose);
+	//! Transforms the system to astrocentric reference frame
+	void transform_to_ac(bool verbose, sim_data_t* sim_data);
 	//! Transform the time using the new time unit: 1/k = 58.13244 ...
 	void transform_time(bool verbose);
 	//! Transform the velocity using the new time unit: 1/k = 58.13244 ...

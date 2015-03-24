@@ -26,6 +26,8 @@ namespace redutilcu
 		var_t get_total_mass(int n, body_type_t type, const sim_data_t *sim_data);
 		void compute_bc(int n, bool verbose, const sim_data_t *sim_data, vec_t* R0, vec_t* V0);
 		void transform_to_bc(int n, bool verbose, const sim_data_t *sim_data);
+		void get_star_bc_phase(int n, bool verbose, const sim_data_t *sim_data, vec_t* R0, vec_t* V0);
+		void transform_to_ac(int n, bool verbose, const sim_data_t *sim_data);
 
 		var_t calculate_radius(var_t m, var_t density);
 		var_t calculate_density(var_t m, var_t R);
@@ -37,7 +39,7 @@ namespace redutilcu
 
 		int	kepler_equation_solver(var_t ecc, var_t mean, var_t eps, var_t* E);
 		int calculate_phase(var_t mu, const orbelem_t* oe, vec_t* rVec, vec_t* vVec);
-		int calculate_orbital_element(const var_t mu, orbelem_t* oe, const vec_t rVec, const vec_t vVec);		//NEED TRANSFORMED TIME
+		int calculate_orbital_element(const var_t mu, orbelem_t* oe, const vec_t rVec, const vec_t vVec);
 
 		void shift_into_range(const var_t lower, const var_t upper, var_t& value);
 

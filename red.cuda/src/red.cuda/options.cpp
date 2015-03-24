@@ -204,7 +204,11 @@ pp_disk* options::create_pp_disk()
 		//ppd->print_result_ascii(cout);
 	}
 
-	ppd->transform_to_bc(verbose);
+	if (0 == fabs(ppd->sim_data->y[0][0].x) && 0 == fabs(ppd->sim_data->y[0][0].y) && 0 == fabs(ppd->sim_data->y[0][0].z) && 0 == fabs(ppd->sim_data->y[1][0].x) && 0 == fabs(ppd->sim_data->y[1][0].y) && 0 == fabs(ppd->sim_data->y[1][0].z))
+	{
+		ppd->transform_to_bc(verbose);
+	}
+
 	ppd->transform_time(verbose);
 	ppd->transform_velocity(verbose);
 	if (COMPUTING_DEVICE_GPU == comp_dev)

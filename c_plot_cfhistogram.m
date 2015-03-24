@@ -22,4 +22,4 @@ bar(xout(idx), n(idx),'BarWidth',1,'FaceColor','r');
 title('Histogram of close encounters');
 xlabel('radii enhance factor');
 ylabel('number of close encounters');
-legend(int2str(sum(n) - sum(n(idx))),int2str(sum(n(idx))), int2str(sum(n(idx))/(sum(n) - sum(n(idx)))))
+legend(int2str(sum(n) - sum(n(idx))),int2str(sum(n(idx))));

@@ -177,6 +177,64 @@ void transform_to_bc(int n, bool verbose, const sim_data_t *sim_data)
 	}
 }
 
+void get_star_bc_phase(int n, bool verbose, const sim_data_t *sim_data, vec_t* R0, vec_t* V0)
+{
+	const vec_t* r = sim_data->h_y[0];
+	const vec_t* v = sim_data->h_y[1];
+	bool isstar = false;
+
+	for (int j = 0; j < n; j++ )
+	{
+		if (BODY_TYPE_STAR == sim_data->h_body_md->body_type)
+		{
+			R0->x = r[j].x;		R0->y = r[j].y;		R0->z = r[j].z;
+			V0->x = v[j].x;		V0->y = v[j].y;		V0->z = v[j].z;
+			isstar = true;
+			break;
+		}
+	}
+	if (!isstar)
+	{
+		throw string("No star is included!");
+	}
+
+	if (verbose)
+	{
+		cout << "Position and velocity of star:" << endl;
+		cout << "R0: ";		print_vector(R0);
+		cout << "V0: ";		print_vector(V0);
+	}
+}
+
+void transform_to_ac(int n, bool verbose, const sim_data_t *sim_data)
+{
+	if (verbose)
+	{
+		cout << "Transforming to astrocentric system ... ";
+	}
+
+	// Position and velocity of the system's astrocenter
+	vec_t R0 = {0.0, 0.0, 0.0, 0.0};
+	vec_t V0 = {0.0, 0.0, 0.0, 0.0};
+
+	get_star_bc_phase(n, verbose, sim_data, &R0, &V0);
+
+	vec_t* r = sim_data->h_y[0];
+	vec_t* v = sim_data->h_y[1];
+	// Transform the bodies coordinates and velocities
+
+	for (int j = n - 1; j >= 0; j-- )
+	{
+		r[j].x -= R0.x;		r[j].y -= R0.y;		r[j].z -= R0.z;
+		v[j].x -= V0.x;		v[j].y -= V0.y;		v[j].z -= V0.z;
+	}
+
+	if (verbose)
+	{
+		cout << "done" << endl;
+	}
+}
+
 var_t calculate_radius(var_t m, var_t density)
 {
 	static var_t four_pi_over_three = 4.1887902047863909846168578443727;
@@ -304,11 +362,6 @@ int calculate_orbital_element(const var_t mu, orbelem_t* oe, const vec_t rVec, c
 {
     const var_t sq2 = 1.0e-14;
     const var_t sq3 = 1.0e-14;
-
-	//TRANSFORM BACK VELOCITIES
-	//vVec.x *= K;
-	//vVec.y *= K;
-	//vVec.z *= K;
 
 	// Calculate energy, h
 	var_t v2 = SQR(vVec.x) + SQR(vVec.y) + SQR(vVec.z);
