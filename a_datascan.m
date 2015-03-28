@@ -1,7 +1,7 @@
 %%Close encounter data
 clear all
 
-runnum = 8;
+runnum = 1;
 pc_laptop = 'D';            %'D' : pc, 'C' : laptop
 
 currentdir = strcat(pc_laptop,':\Work\ELTE\TDK\red.cuda\TestRun\CloseEncounter\2D\Run_',int2str(runnum),'\');
@@ -11,7 +11,8 @@ if ~strcmp(unique(rawparams.textdata),'CLOSE_ENCOUNTER')
     error('Not just close encounter events happened')
 end
 
-params = rawparams.data(:,1:34);
+params = sortrows(rawparams.data(:,1:34),3);
+%params = rawparams.data(:,1:34);
 clear rawparams
 
 t = params(:,1);            %time in days
@@ -33,7 +34,7 @@ cf = d ./ (r1 + r2);        %radii enhance factor
 
 j = 1;
 for i=1:(length(params)-1)
-   if id1(i) ~= id1(i+1) || id2(i) ~= id2(i+1) || t(i+1) - t(i) > 5
+   if id1(i) ~= id1(i+1) || id2(i) ~= id2(i+1) || t(i+1) - t(i) > 1
        j = j + 1;
    end
 end
@@ -45,7 +46,7 @@ pos = zeros(N,1);           %position of the last step of close encounter
 timeofce = zeros(N,1);      %time of close encounter event
 
 for i=1:(length(params)-1)
-   if id1(i) ~= id1(i+1) || id2(i) ~= id2(i+1) || t(i+1) - t(i) > 5
+   if id1(i) ~= id1(i+1) || id2(i) ~= id2(i+1) || t(i+1) - t(i) > 1
        pos(j) = i;
        j = j + 1;
    end
@@ -107,12 +108,12 @@ for i=1:length(t)
 end
 
 %%
-for i = 1:length(t)
-        figure();
-        plot(x(i,596),y(i,596),'*');
-        title(sprintf('Positions at time, t = %5.1f day',t(i)));
-        xlabel('x (AU)');
-        ylabel('y (AU)');
-end
+% for i = 1:length(t)
+%         figure();
+%         plot(x(i,596),y(i,596),'*');
+%         title(sprintf('Positions at time, t = %5.1f day',t(i)));
+%         xlabel('x (AU)');
+%         ylabel('y (AU)');
+% end
 
 

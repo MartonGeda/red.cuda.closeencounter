@@ -492,7 +492,7 @@ void pp_disk::cpu_calc_grav_accel_SI( ttt_t curr_t, interaction_bound int_bound,
 							events[k].r2 = r[mergerIdx];
 							events[k].v2 = v[mergerIdx];
 
-							sim_data_t* sim_data_copy = new sim_data_t;
+ 							sim_data_t* sim_data_copy = new sim_data_t;
 							allocate_host_storage(sim_data_copy, n_bodies->get_n_total());
 
 							for (int i = 0; i < n_bodies->get_n_total(); i++)

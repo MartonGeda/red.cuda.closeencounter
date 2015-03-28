@@ -369,10 +369,6 @@ int calculate_orbital_element(const var_t mu, orbelem_t* oe, const vec_t rVec, c
 	var_t r = sqrt(r2);
 
 	var_t h = v2 / 2.0 - (mu / sqrt(r2));
-    if (h >= 0.0)
-    {
-        return 1;
-    }
 
     vec_t cVec = {rVec.y*vVec.z - rVec.z*vVec.y, rVec.z*vVec.x - rVec.x*vVec.z, rVec.x*vVec.y - rVec.y*vVec.x, 0.0};
 	vec_t lVec = {(-mu / r) * rVec.x + vVec.y*cVec.z - vVec.z*cVec.y, (-mu / r) * rVec.y + vVec.z*cVec.x - vVec.x*cVec.z, (-mu / r) * rVec.z + vVec.x*cVec.y - vVec.y*cVec.x , 0.0};
@@ -403,11 +399,14 @@ int calculate_orbital_element(const var_t mu, orbelem_t* oe, const vec_t rVec, c
     {
         incl = 0.0;
     }
-    
-    // Calculate longitude of node, O
+	else if (incl > (PI - sq2))
+	{
+		incl = PI;
+	}
+        // Calculate longitude of node, O
     
     var_t node = 0.0;
-    if (incl != 0.0)
+    if (incl != 0.0 && incl != PI)
     {
         var_t tmpx = -cVec.y / (c * sini);
         var_t tmpy = cVec.x / (c * sini);
@@ -415,9 +414,11 @@ int calculate_orbital_element(const var_t mu, orbelem_t* oe, const vec_t rVec, c
 		shift_into_range(0.0, 2.0*PI, node);
     }
     
-    // Calculate argument of pericenter, w
+    // Calculate argument of pericenter, w (E excentric anomaly, H hyperbolic anomaly)
     
     var_t E = 0.0;
+	var_t H = 0.0;
+	var_t shH = 0.0;
     var_t peri = 0.0;
     if (e2 != 0.0)
     {
@@ -426,10 +427,18 @@ int calculate_orbital_element(const var_t mu, orbelem_t* oe, const vec_t rVec, c
         peri = atan2(tmpy, tmpx);
         shift_into_range(0.0, 2.0*PI, peri);
 
-        tmpx = 1.0 / e * (1.0 - r / a);
-        tmpy = rv / (sqrt(mu * a) * e);
-        E = atan2(tmpy, tmpx);
-        shift_into_range(0.0, 2.0*PI, E);
+		if (h >= 0.0)
+		{
+			shH = rv / ( SQR(a*mu) / CUBE(c) * e * pow(e2 - 1, 1.5));
+			H = asinh(shH);	
+		}
+		else
+		{
+			tmpx = 1.0 / e * (1.0 - r / a);
+			tmpy = rv / (sqrt(mu * a) * e);
+			E = atan2(tmpy, tmpx);
+			shift_into_range(0.0, 2.0*PI, E);
+		}
     }
     else
     {
@@ -439,9 +448,17 @@ int calculate_orbital_element(const var_t mu, orbelem_t* oe, const vec_t rVec, c
     }
     
     // Calculate mean anomaly, M
-    
-    var_t M = E - e * sin(E);
-    shift_into_range(0, 2.0*PI, M);
+   
+	var_t M = 0.0;
+	if (h >= 0.0)
+	{
+		M = e*shH - H;
+	}
+	else
+	{
+		M = E - e * sin(E);
+		shift_into_range(0, 2.0*PI, M);
+	}
 
 	oe->sma		= a;
 	oe->ecc		= e;
@@ -464,6 +481,21 @@ void shift_into_range(const var_t lower, const var_t upper, var_t& value)
     {
         value += range;
     }
+}
+
+var_t asinh(const var_t value)
+{   
+	var_t returned;
+
+	if (value > 0)
+	{
+		returned = log(value + sqrt(value * value + 1));
+	}
+	else
+	{
+		returned = -log(-value + sqrt(value * value + 1));
+	}
+	return returned;
 }
 
 void print_vector(const vec_t *v)

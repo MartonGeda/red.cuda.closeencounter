@@ -42,6 +42,7 @@ namespace redutilcu
 		int calculate_orbital_element(const var_t mu, orbelem_t* oe, const vec_t rVec, const vec_t vVec);
 
 		void shift_into_range(const var_t lower, const var_t upper, var_t& value);
+		var_t asinh(const var_t value);
 
 		void print_vector(const vec_t *v);
 	} /* tools */

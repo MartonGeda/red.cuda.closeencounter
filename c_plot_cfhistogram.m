@@ -14,7 +14,7 @@ range = 0.25;
 
 
 bin = 0:range:cfmax;
-figure();
+figure('Name','CfHist','NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
 [n, xout] = hist(Cf,bin);
 idx = xout < 1;
 bar(xout,n,'hist'); hold on;
