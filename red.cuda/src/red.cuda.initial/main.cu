@@ -237,7 +237,7 @@ void set_parameters_of_n_pp_body_disk(body_disk_t& disk)
 	srand(time(NULL));
 
 	disk.nBody[BODY_TYPE_STAR       ] = 1;
-	disk.nBody[BODY_TYPE_PROTOPLANET] = 500;
+	disk.nBody[BODY_TYPE_PROTOPLANET] = 1000;
 
 	int_t nBodies = calculate_number_of_bodies(disk);
 	disk.mig_type = new migration_type_t[nBodies];
@@ -259,8 +259,8 @@ void set_parameters_of_n_pp_body_disk(body_disk_t& disk)
 
 	type = BODY_TYPE_PROTOPLANET;
 	{
-		disk.oe_d[type].item[ORBITAL_ELEMENT_SMA ] = new uniform_distribution(rand(), 1.0, 1.1);
-		disk.oe_d[type].item[ORBITAL_ELEMENT_ECC ] = new uniform_distribution(rand(), 0.0, 0.01);
+		disk.oe_d[type].item[ORBITAL_ELEMENT_SMA ] = new uniform_distribution(rand(), 2.0, 2.5);
+		disk.oe_d[type].item[ORBITAL_ELEMENT_ECC ] = new uniform_distribution(rand(), 0.0, 0.2);
 		disk.oe_d[type].item[ORBITAL_ELEMENT_INC ] = new uniform_distribution(rand(), 0.0, 0.0);
 		disk.oe_d[type].item[ORBITAL_ELEMENT_PERI] = new uniform_distribution(rand(), 0.0, 2.0 * PI);
 		disk.oe_d[type].item[ORBITAL_ELEMENT_NODE] = new uniform_distribution(rand(), 0.0, 0.0);
