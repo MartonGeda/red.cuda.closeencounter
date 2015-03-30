@@ -1,6 +1,6 @@
 %% Orbital Elements, time
 
-for i=1:N
+for i=81
     if (i == 1)
         figure('Name',int2str(1),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
 
@@ -9,13 +9,17 @@ for i=1:N
         title('semimajor axis');
         xlabel('time (day)');
         ylabel('a (AU)');
-        legend(int2str(id1(pos(1))),int2str(id2(pos(1))));
+        lh = legend(int2str(id1(pos(1))),int2str(id2(pos(1))));
+        p = get(lh,'Position');
+        p(1) = 0.93;
+        p(2) = 0.95;
+        set(lh,'Position',p);
         
         subplot(2,2,2);
         plot(t(1:pos(1)) - t(1),oe1(1:pos(1),2),'*',t(1:pos(1)) - t(1),oe2(1:pos(1),2),'*');
         title('eccentricity');
         xlabel('time (day)');
-        ylabel('e');
+        ylabel('e (-)');
         
         subplot(2,2,3);
         plot(t(1:pos(1)) - t(1),oe1(1:pos(1),4),'*',t(1:pos(1)) - t(1),oe2(1:pos(1),4),'*');
@@ -30,21 +34,32 @@ for i=1:N
         ylabel('M (rad)');
         
         suptitle(sprintf('time, t = %5.2f day',t(1)));
+        
+        if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))),'dir'))
+            mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
+        end
+        cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
+        set(gcf,'PaperPositionMode','auto');
+        print('-dpng',strcat('OrbEl',int2str(1)));        
     else 
-        figure('Name',int2str(i),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
+        %figure('Name',int2str(i),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
 
         subplot(2,2,1);
         plot(t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),oe1((pos(i-1)+1):pos(i),1),'*',t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),oe2((pos(i-1)+1):pos(i),1),'*');
         title('semimajor axis');
         xlabel('time (day)');
         ylabel('a (AU)');
-        legend(int2str(id1(pos(i))),int2str(id2(pos(i))));
+        lh = legend(int2str(id1(pos(i))),int2str(id2(pos(i))));
+        p = get(lh,'Position');
+        p(1) = 0.93;
+        p(2) = 0.95;
+        set(lh,'Position',p);
         
         subplot(2,2,2);
         plot(t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),oe1((pos(i-1)+1):pos(i),2),'*',t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),oe2((pos(i-1)+1):pos(i),2),'*');
         title('eccentricity');
         xlabel('time (day)');
-        ylabel('e');
+        ylabel('e (-)');
         
         subplot(2,2,3);
         plot(t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),oe1((pos(i-1)+1):pos(i),4),'*',t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),oe2((pos(i-1)+1):pos(i),4),'*');
@@ -58,6 +73,13 @@ for i=1:N
         xlabel('time (day)');
         ylabel('M (rad)');  
         
-        suptitle(sprintf('time, t = %5.2f day',t(pos(i-1)+1)));        
+        suptitle(sprintf('time, t = %5.2f day',t(pos(i-1)+1)));
+        
+        if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))),'dir'))
+            mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
+        end
+        cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
+        set(gcf,'PaperPositionMode','auto');
+        print('-dpng',strcat('OrbEl',int2str(i)));         
     end
 end

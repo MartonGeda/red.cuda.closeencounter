@@ -1,7 +1,7 @@
 %%Close encounter data
 clear all
 
-runnum = 1;
+runnum = 2;
 pc_laptop = 'D';            %'D' : pc, 'C' : laptop
 
 currentdir = strcat(pc_laptop,':\Work\ELTE\TDK\red.cuda\TestRun\CloseEncounter\2D\Run_',int2str(runnum),'\');
@@ -52,6 +52,35 @@ for i=1:(length(params)-1)
    end
 end
 pos(j) = length(params);
+
+for i=1:length(pos)
+    if i==1
+       params(1:pos(1),:) = sortrows(params(1:pos(1),:),1);
+    else
+       params(pos(i-1)+1:pos(i),:) = sortrows(params(pos(i-1)+1:pos(i),:),1); 
+    end   
+end
+
+t = params(:,1);            %time in days
+d = params(:,2);            %distance in au
+id1 = params(:,3);          %id of body1
+id2 = params(:,4);          %id of body2
+m1 = params(:,5);           %mass of body1
+rho1 = params(:,6);         %density of body1
+r1 = params(:,7);           %radius of body1
+phase1 = params(:,8:13);    %phase of body1
+oe1 = params(:,14:19);      %orbital elements of body1
+m2 = params(:,20);          %mass of body2
+rho2 = params(:,21);        %density of body2
+r2 = params(:,22);          %radius of body2
+phase2 = params(:,23:28);   %phase of body2
+oe2 = params(:,29:34);      %orbital elements of body2
+
+cf = d ./ (r1 + r2);        %radii enhance factor
+
+h1 = 0.5*(phase1(:,4).^2 + phase1(:,5).^2 + phase1(:,6).^2) - 0.01720209895^2*(1+m1(:))./sqrt(phase1(:,1).^2 + phase1(:,2).^2 + phase1(:,3).^2);
+h2 = 0.5*(phase2(:,4).^2 + phase2(:,5).^2 + phase2(:,6).^2) - 0.01720209895^2*(1+m2(:))./sqrt(phase2(:,1).^2 + phase2(:,2).^2 + phase2(:,3).^2);
+
 
 for i=1:length(timeofce)
    if i==1

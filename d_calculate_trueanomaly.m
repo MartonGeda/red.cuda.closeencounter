@@ -4,31 +4,80 @@ E01 = zeros(length(params),1);      %initial excentric anomaly from smith formul
 E02 = zeros(length(params),1);      %initial excentric anomaly from smith formula for body2
 E1 = zeros(length(params),1);       %excentric anomaly for body1
 E2 = zeros(length(params),1);       %excentric anomaly for body2
+
+H01 = zeros(length(params),1);      %initial hyperbolic anomaly from burkhardt-dunby formula for body1
+H02 = zeros(length(params),1);      %initial hyperbolic anomaly from burkhardt-dunby formula for body2
+H1 = zeros(length(params),1);       %hyperbolic anomaly for body1
+H2 = zeros(length(params),1);       %hyperbolic anomaly for body2
+
+
 v1 = zeros(length(params),1);       %true anomaly for body1
 v2 = zeros(length(params),1);       %true anomaly for body2
 
-for i=1:length(params)   
-    E01(i) = oe1(i,6) + oe1(i,2) * (sin(oe1(i,6))) / (1.0 - sin(oe1(i,6) + oe1(i,2)) + sin(oe1(i,6)));
-    err1 = abs(E1(i) - E01(i));
-    E02(i) = oe2(i,6) + oe2(i,2) * (sin(oe2(i,6))) / (1.0 - sin(oe2(i,6) + oe2(i,2)) + sin(oe2(i,6)));
-    err2 = abs(E2(i) - E02(i));
-    while ( 1 )     %Newton iteration
-        E1(i) = E01(i) - (E01(i) - oe1(i,2) * sin(E01(i)) - oe1(i,6)) / (1.0 - oe1(i,2) * cos(E01(i)));
+for i=1:length(params)
+    if (h1(i) < 0)
+        E01(i) = oe1(i,6) + oe1(i,2) * (sin(oe1(i,6))) / (1.0 - sin(oe1(i,6) + oe1(i,2)) + sin(oe1(i,6)));
         err1 = abs(E1(i) - E01(i));
-        E2(i) = E02(i) - (E02(i) - oe2(i,2) * sin(E02(i)) - oe2(i,6)) / (1.0 - oe2(i,2) * cos(E02(i)));
-        err2 = abs(E2(i) - E02(i));
-        if (err1 < 1e-14 && err2 < 1e-14)
-            break;
+        while ( 1 )     %Newton iteration
+            E1(i) = E01(i) - (E01(i) - oe1(i,2) * sin(E01(i)) - oe1(i,6)) / (1.0 - oe1(i,2) * cos(E01(i)));
+            err1 = abs(E1(i) - E01(i));
+            if (err1 < 1e-13)
+                break;
+            end
+            if (isnan(err1))
+               break; 
+            end
+            E01(i) = E1(i);
         end
-        if (isnan(err1) || isnan(err2))
-           break; 
+        v1(i) = 2.0 * atan(sqrt((1.0 + oe1(i,2)) / (1.0 - oe1(i,2))) * tan(E1(i) / 2.0));
+    else
+        H01(i) = log(2*oe1(i,6)/oe1(i,2) + 1.8);
+        err1 = abs(H1(i) - H01(i));
+        while ( 1 )     %Newton iteration
+            H1(i) = H01(i) - (oe1(i,2) * sinh(H01(i)) - H01(i) - oe1(i,6)) / (oe1(i,2) * cosh(H01(i)) - 1.0);
+            err1 = abs(H1(i) - H01(i));
+            if (err1 < 1e-13)
+                break;
+            end
+            if (isnan(err1))
+               break; 
+            end
+            H01(i) = H1(i);
         end
-        E01 = E1;
-        E02 = E2;
+        v1(i) = 2.0 * atan(sqrt((oe1(i,2) + 1.0) / (oe1(i,2) - 1.0)) * tanh(H1(i) / 2.0));       
     end
     
-    v1(i) = 2.0 * atan(sqrt((1.0 + oe1(i,2)) / (1.0 - oe1(i,2))) * tan(E1(i) / 2.0));
-    v2(i) = 2.0 * atan(sqrt((1.0 + oe2(i,2)) / (1.0 - oe2(i,2))) * tan(E2(i) / 2.0));
+    if (h2(i) < 0)
+        E02(i) = oe2(i,6) + oe2(i,2) * (sin(oe2(i,6))) / (1.0 - sin(oe2(i,6) + oe2(i,2)) + sin(oe2(i,6)));
+        err2 = abs(E2(i) - E02(i));
+        while ( 1 )     %Newton iteration
+            E2(i) = E02(i) - (E02(i) - oe2(i,2) * sin(E02(i)) - oe2(i,6)) / (1.0 - oe2(i,2) * cos(E02(i)));
+            err2 = abs(E2(i) - E02(i));
+            if (err2 < 1e-13)
+                break;
+            end
+            if (isnan(err2))
+               break; 
+            end
+            E02(i) = E2(i);
+        end  
+        v2(i) = 2.0 * atan(sqrt((1.0 + oe2(i,2)) / (1.0 - oe2(i,2))) * tan(E2(i) / 2.0));
+    else
+        H02(i) = log(2*oe2(i,6)/oe2(i,2) + 1.8);
+        err2 = abs(H2(i) - H02(i));
+        while ( 1 )     %Newton iteration
+            H2(i) = H02(i) - (oe2(i,2) * sinh(H02(i)) - H02(i) - oe2(i,6)) / (oe2(i,2) * cosh(H02(i)) - 1.0);
+            err2 = abs(H2(i) - H02(i));
+            if (err2 < 1e-13)
+                break;
+            end
+            if (isnan(err2))
+               break; 
+            end
+            H02(i) = H2(i);
+        end 
+        v2(i) = 2.0 * atan(sqrt((oe2(i,2) + 1.0) / (oe2(i,2) - 1.0)) * tanh(H2(i) / 2.0));      
+    end
 end
 
 u1 = v1 + oe1(:,4);     %angle from line of nodes for body1
