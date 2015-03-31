@@ -1,5 +1,8 @@
 %% Orbital Elements, time
 
+% if save == true, then save figures
+save = false;
+
 for i=81
     if (i == 1)
         figure('Name',int2str(1),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
@@ -35,12 +38,14 @@ for i=81
         
         suptitle(sprintf('time, t = %5.2f day',t(1)));
         
-        if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))),'dir'))
-            mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
+        if(save)
+            if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))),'dir'))
+                mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
+            end
+            cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
+            set(gcf,'PaperPositionMode','auto');
+            print('-dpng',strcat('OrbEl',int2str(1))); 
         end
-        cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
-        set(gcf,'PaperPositionMode','auto');
-        print('-dpng',strcat('OrbEl',int2str(1)));        
     else 
         %figure('Name',int2str(i),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
 
@@ -75,11 +80,13 @@ for i=81
         
         suptitle(sprintf('time, t = %5.2f day',t(pos(i-1)+1)));
         
-        if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))),'dir'))
-            mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
+        if(save)
+            if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))),'dir'))
+                mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
+            end
+            cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
+            set(gcf,'PaperPositionMode','auto');
+            print('-dpng',strcat('OrbEl',int2str(i)));  
         end
-        cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
-        set(gcf,'PaperPositionMode','auto');
-        print('-dpng',strcat('OrbEl',int2str(i)));         
     end
 end

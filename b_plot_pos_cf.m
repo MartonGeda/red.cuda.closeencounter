@@ -1,6 +1,9 @@
 %% plot positions, radii enhance factor
 
-for i = 60
+% if save == true, then save figures
+save = false;
+
+for i = 51:70
    if i == 1
       figure('Name',int2str(1),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
       subplot(1,2,1);
@@ -22,15 +25,17 @@ for i = 60
       xlabel('time (day)');
       ylabel('radii enhance factor');
       
-      if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))),'dir'))
-          mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
+      if (save)
+          if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))),'dir'))
+              mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
+          end
+          cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
+          set(gcf,'PaperPositionMode','auto');
+          print('-dpng',strcat('PosCf',int2str(1)));
       end
-      cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
-      set(gcf,'PaperPositionMode','auto');
-      print('-dpng',strcat('PosCf',int2str(1)));
       
    else
-      %figure('Name',int2str(i),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
+      figure('Name',int2str(i),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
       subplot(1,2,1);
       plot(phase1(pos(i-1)+1:pos(i),1),phase1(pos(i-1)+1:pos(i),2),'*',phase2(pos(i-1)+1:pos(i),1),phase2(pos(i-1)+1:pos(i),2),'*');
       title('positions of the bodies');
@@ -51,12 +56,13 @@ for i = 60
       xlabel('time (day)');
       ylabel('radii enhance factor');
       
-      if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))),'dir'))
-          mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
-      end
-      cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
-      set(gcf,'PaperPositionMode','auto');
-      print('-dpng',strcat('PosCf',int2str(i)));  
-      
+      if (save)
+          if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))),'dir'))
+              mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
+          end
+          cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
+          set(gcf,'PaperPositionMode','auto');
+          print('-dpng',strcat('PosCf',int2str(i)));
+      end    
    end
 end

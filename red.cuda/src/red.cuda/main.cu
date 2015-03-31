@@ -198,11 +198,12 @@ int main(int argc, const char** argv, const char** env)
 				{
 					ppd->print_event_data(*event_f, *log_f);
 					ppd->clear_event_counter();
+					ppd->print_result_ascii(*result_f);
 				}
 			}
 			else if (!opt.param->close_encounter && opt.param->inner_steps)
 			{
-				//innter_steps true, collision true
+				//innter_steps true, close_encounter false
 				if (0.0 < opt.param->thrshld[THRESHOLD_RADII_ENHANCE_FACTOR] && ppd->check_for_collision())
 				{
 					ppd->print_event_data(*event_f, *log_f);

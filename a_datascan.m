@@ -1,7 +1,7 @@
 %%Close encounter data
-clear all
+%clear all
 
-runnum = 2;
+runnum = 3;
 pc_laptop = 'D';            %'D' : pc, 'C' : laptop
 
 currentdir = strcat(pc_laptop,':\Work\ELTE\TDK\red.cuda\TestRun\CloseEncounter\2D\Run_',int2str(runnum),'\');
@@ -81,8 +81,17 @@ cf = d ./ (r1 + r2);        %radii enhance factor
 h1 = 0.5*(phase1(:,4).^2 + phase1(:,5).^2 + phase1(:,6).^2) - 0.01720209895^2*(1+m1(:))./sqrt(phase1(:,1).^2 + phase1(:,2).^2 + phase1(:,3).^2);
 h2 = 0.5*(phase2(:,4).^2 + phase2(:,5).^2 + phase2(:,6).^2) - 0.01720209895^2*(1+m2(:))./sqrt(phase2(:,1).^2 + phase2(:,2).^2 + phase2(:,3).^2);
 
+dh = zeros(length(params),1);
+for i=1:N
+    if (i==1)
+       dh(1:pos(1)) = (h1(1:pos(1)) + h2(1:pos(1))) / 2 - (h1(1) + h2(1)) / 2;
+    else
+       dh(pos(i-1)+1:pos(i)) = (h1(pos(i-1)+1:pos(i)) + h2(pos(i-1)+1:pos(i))) / 2 - (h1(pos(i-1)+1) + h2(pos(i-1)+1)) / 2; 
+    end
+end
 
-for i=1:length(timeofce)
+
+for i=1:N
    if i==1
        timeofce(i) = t(pos(i)) - t(i);
    else
@@ -92,7 +101,7 @@ end
 
 %% ascii result
 
-runnum = 1;
+runnum = 3;
 pc_laptop = 'D';            %'D' : pc, 'C' : laptop
 
 currentdir = strcat(pc_laptop,':\Work\ELTE\TDK\red.cuda\TestRun\CloseEncounter\2D\Run_',int2str(runnum),'\');
@@ -135,6 +144,8 @@ for i=1:length(t)
        vz(i,1:N) = params((i-1)*N+1 : i*N,15);
     end
 end
+
+%distances
 
 %%
 % for i = 1:length(t)

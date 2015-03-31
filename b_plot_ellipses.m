@@ -1,5 +1,8 @@
 %% plot the intersecting ellipses
 
+% if save == true, then save figures
+save = false;
+
 d_calculate_trueanomaly;
 u = linspace(-pi,pi,1000);
 
@@ -84,12 +87,14 @@ for i = 1:N
         
         suptitle(sprintf('time t = %5.2f day, time of event \\Deltat = %1.3f day',t(1),timeofce(1)));  
 
-        if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))),'dir'))
-            mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
+        if(save)
+            if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))),'dir'))
+                mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
+            end
+            cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
+            set(gcf,'PaperPositionMode','auto');
+            print('-dpng',strcat('Ell',int2str(1)));
         end
-        cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
-        set(gcf,'PaperPositionMode','auto');
-        print('-dpng',strcat('Ell',int2str(1)));
         
         delete(findall(gcf,'Tag','oe'))
         
@@ -172,12 +177,14 @@ for i = 1:N
         
         suptitle(sprintf('time t = %5.2f day, time of event \\Deltat = %1.3f day',t(pos(i-1)+1),timeofce(i)));  
 
-        if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))),'dir'))
-            mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
+        if(save)
+            if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))),'dir'))
+                mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
+            end
+            cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
+            set(gcf,'PaperPositionMode','auto');
+            print('-dpng',strcat('Ell',int2str(i)));   
         end
-        cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
-        set(gcf,'PaperPositionMode','auto');
-        print('-dpng',strcat('Ell',int2str(i)));   
         
         delete(findall(gcf,'Tag','oe'))
         

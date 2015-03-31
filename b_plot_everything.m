@@ -1,5 +1,8 @@
 %% plot pos,vel,cf,oe,(v),ellipses before, ellipses after
 
+% if save == true, then save figures
+save = false;
+
 d_calculate_trueanomaly;
 u = linspace(-pi,pi,1000);
 
@@ -128,12 +131,14 @@ for i=1:N
         
         suptitle(sprintf('time t = %5.2f day, time of event, \\Deltat = %1.3f day',t(1),timeofce(1)));
 
-%         if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))),'dir'))
-%             mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
-%         end
-%         cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1)))); 
-        set(gcf,'PaperPositionMode','auto');
-        print('-dpng',strcat('All',int2str(1)));  
+        if(save)
+            if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))),'dir'))
+                mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
+            end
+            cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
+            set(gcf,'PaperPositionMode','auto');
+            print('-dpng',strcat('All',int2str(1)));  
+        end
 
     else
         %figure('Name',int2str(i),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
@@ -259,11 +264,13 @@ for i=1:N
         
         suptitle(sprintf('time t = %5.2f day, time of event \\Deltat = %1.3f day',t(pos(i-1)+1),timeofce(i)));         
 
-%         if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))),'dir'))
-%             mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
-%         end
-%         cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
-        set(gcf,'PaperPositionMode','auto');
-        print('-dpng',strcat('All',int2str(i)));    
+        if(save)
+            if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))),'dir'))
+                mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
+            end
+            cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
+            set(gcf,'PaperPositionMode','auto');
+            print('-dpng',strcat('All',int2str(i)));  
+        end
     end    
 end

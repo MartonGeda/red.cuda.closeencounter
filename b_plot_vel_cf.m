@@ -1,5 +1,8 @@
 %% velocities, collision factor
 
+% if save == true, then save figures
+save = false;
+
 for i=1:N
     if (i == 1)
         figure('Name',int2str(1),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
@@ -22,12 +25,14 @@ for i=1:N
         xlabel('time (day)');
         ylabel('radii enhance factor');
         
-        if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))),'dir'))
-            mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
+        if(save)
+            if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))),'dir'))
+                mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
+            end
+            cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
+            set(gcf,'PaperPositionMode','auto');
+            print('-dpng',strcat('VelCf',int2str(1)));
         end
-        cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
-        set(gcf,'PaperPositionMode','auto');
-        print('-dpng',strcat('VelCf',int2str(1)));
       
     else 
         %figure('Name',int2str(i),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
@@ -50,11 +55,13 @@ for i=1:N
         xlabel('time (day)');
         ylabel('radii enhance factor');
         
-        if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))),'dir'))
-            mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
+        if(save)
+            if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))),'dir'))
+                mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
+            end
+            cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
+            set(gcf,'PaperPositionMode','auto');
+            print('-dpng',strcat('VelCf',int2str(i))); 
         end
-        cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
-        set(gcf,'PaperPositionMode','auto');
-        print('-dpng',strcat('VelCf',int2str(i)));        
     end
 end
