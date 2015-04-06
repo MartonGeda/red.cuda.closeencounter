@@ -4,7 +4,7 @@
 
 d_calculate_trueanomaly;
 u = linspace(-pi,pi,1000);
-for i=92
+for i=133
 
 if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))),'dir'))
     mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
@@ -79,7 +79,7 @@ if (i == 1)
         writeVideo(writerObj,F);    
     end
 else
-    %fig = figure('Name',int2str(i),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
+    fig = figure('Name',int2str(i),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
 
     mx1 = zeros(pos(i) - pos(i-1),length(u));
     my1 = zeros(pos(i) - pos(i-1),length(u));

@@ -3,7 +3,7 @@
 % if save == true, then save figures
 save = false;
 
-for i = 51:70
+for i = 32
    if i == 1
       figure('Name',int2str(1),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
       subplot(1,2,1);
@@ -11,6 +11,7 @@ for i = 51:70
       title('positions of the bodies');
       xlabel('x (AU)');
       ylabel('y (AU)');
+      axis equal
       lh = legend(int2str(id1(pos(1))),int2str(id2(pos(1))));
       p = get(lh,'Position');
       p(1) = 0.48;
@@ -41,6 +42,7 @@ for i = 51:70
       title('positions of the bodies');
       xlabel('x (AU)');
       ylabel('y (AU)');
+      axis equal
       lh = legend(int2str(id1(pos(i))),int2str(id2(pos(i))));
       p = get(lh,'Position');
       p(1) = 0.48;

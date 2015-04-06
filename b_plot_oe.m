@@ -3,7 +3,7 @@
 % if save == true, then save figures
 save = false;
 
-for i=81
+for i=60
     if (i == 1)
         figure('Name',int2str(1),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
 

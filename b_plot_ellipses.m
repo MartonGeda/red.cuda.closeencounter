@@ -4,9 +4,9 @@
 save = false;
 
 d_calculate_trueanomaly;
-u = linspace(-pi,pi,1000);
+u = linspace(-pi,pi,10000);
 
-for i = 1:N
+for i = 10
     if (i == 1)
         a1 = oe1(1,1);
         e1 = oe1(1,2);
