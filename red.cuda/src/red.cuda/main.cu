@@ -49,8 +49,16 @@ void open_streams(const options& opt, const integrator* intgr, ostream** result_
 		prefix = config + sep + dev + sep + strorage + sep + adapt + sep + int_name + sep;
 	}
 
-	path = file::combine_path(opt.printout_dir, prefix + opt.result_filename) + "." + ext;
-	*result_f = new ofstream(path.c_str(), ios::out);
+	if (opt.param->output_type == OUTPUT_TYPE_TEXT)
+	{
+		path = file::combine_path(opt.printout_dir, prefix + opt.result_filename) + "." + ext;
+		*result_f = new ofstream(path.c_str(), ios::out);
+	}
+	else
+	{
+		path = file::combine_path(opt.printout_dir, prefix + opt.result_filename) + "." + "bin";
+		*result_f = new ofstream(path.c_str(), ios::out | ios::binary);
+	}
 
 	path = file::combine_path(opt.printout_dir, prefix + opt.info_filename) + "." + ext;
 	*info_f = new ofstream(path.c_str(), ios::out);
@@ -132,6 +140,7 @@ int main(int argc, const char** argv, const char** env)
 		pp_disk *ppd = opt.create_pp_disk();
 		integrator *intgr = opt.create_integrator(ppd, 0.001);
 		open_streams(opt, intgr, &result_f, &info_f, &event_f, &log_f);
+		ppd->result_f = result_f;
 
 		file::log_start_cmd(*log_f, argc, argv, env);
 		if (opt.verbose)
@@ -154,7 +163,14 @@ int main(int argc, const char** argv, const char** env)
 
 		time_t time_info_start = clock();
 
-		ppd->print_result_ascii(*result_f);
+		if (opt.param->output_type == OUTPUT_TYPE_TEXT)
+		{
+			//ppd->print_result_ascii(*result_f);
+		}
+		else
+		{
+			//ppd->print_result_binary(*result_f, ppd->t, ppd->sim_data->h_y[0], ppd->sim_data->h_y[1]);
+		}
 
 		//int dummy_k = 0;
 		while (ppd->t <= opt.param->stop_time)
@@ -172,7 +188,14 @@ int main(int argc, const char** argv, const char** env)
 				{
 					ppd->copy_to_host();
 				}
-				ppd->print_result_ascii(*result_f);
+				if (opt.param->output_type == OUTPUT_TYPE_TEXT)
+				{
+					//ppd->print_result_ascii(*result_f);
+				}
+				else
+				{
+					//ppd->print_result_binary(*result_f, ppd->t, ppd->sim_data->h_y[0], ppd->sim_data->h_y[1]);
+				}
 			}
 
 			if (ppd->check_for_ejection_hit_centrum())
@@ -186,6 +209,14 @@ int main(int argc, const char** argv, const char** env)
 				//inner_steps false
 				ppd->print_event_data(*event_f, *log_f);
 				ppd->clear_event_counter();
+				if (opt.param->output_type == OUTPUT_TYPE_TEXT)
+				{
+					ppd->print_result_ascii(*result_f);
+				}
+				else
+				{
+					ppd->print_result_binary(*result_f, ppd->t, ppd->sim_data->h_y[0], ppd->sim_data->h_y[1]);
+				}
 			}
 
 			dt = step(intgr, &sum_time_of_steps, &time_of_one_step);
@@ -198,7 +229,14 @@ int main(int argc, const char** argv, const char** env)
 				{
 					ppd->print_event_data(*event_f, *log_f);
 					ppd->clear_event_counter();
-					ppd->print_result_ascii(*result_f);
+					if (opt.param->output_type == OUTPUT_TYPE_TEXT)
+					{
+						ppd->print_result_ascii(*result_f);
+					}
+					else
+					{
+						ppd->print_result_binary(*result_f, ppd->t, ppd->sim_data->h_y[0], ppd->sim_data->h_y[1]);
+					}
 				}
 			}
 			else if (!opt.param->close_encounter && opt.param->inner_steps)
@@ -232,7 +270,14 @@ int main(int argc, const char** argv, const char** env)
 			{
 				ppd->copy_to_host();
 			}
-			ppd->print_result_ascii(*result_f);
+			if (opt.param->output_type == OUTPUT_TYPE_TEXT)
+			{
+				//ppd->print_result_ascii(*result_f);
+			}
+			else
+			{
+				//ppd->print_result_binary(*result_f, ppd->t, ppd->sim_data->h_y[0], ppd->sim_data->h_y[1]);
+			}
 		}
 		// Needed by nvprof.exe
 		if (COMPUTING_DEVICE_GPU == opt.comp_dev)

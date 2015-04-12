@@ -28,6 +28,13 @@ typedef enum computing_device
 			COMPUTING_DEVICE_N
 		} computing_device_t;
 
+typedef enum output_type
+		{
+			OUTPUT_TYPE_BINARY,
+			OUTPUT_TYPE_TEXT,
+			OUTPUT_TYPE_N
+		} output_type_t;
+
 typedef enum threshold
 		{
 			THRESHOLD_HIT_CENTRUM_DISTANCE,

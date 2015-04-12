@@ -447,7 +447,6 @@ void pp_disk::cpu_calc_grav_accel_SI( ttt_t curr_t, interaction_bound int_bound,
 						const var_t mu1 = constants::Gauss2 * (get_mass_of_star() + p[survivIdx].mass);
 						const var_t mu2 = constants::Gauss2 * (get_mass_of_star() + p[mergerIdx].mass);
 
-						//TODO: test close encounter!
 						//printf prints original times, event stores transformed times
 
 						if (!close_encounter)
@@ -502,6 +501,8 @@ void pp_disk::cpu_calc_grav_accel_SI( ttt_t curr_t, interaction_bound int_bound,
 								sim_data_copy->h_y[1][i] = v[i];
 							}
 
+							//print_result_binary(*result_f, curr_t, sim_data_copy->h_y[0], sim_data_copy->h_y[1]); 
+
 							transform_to_ac(false, sim_data_copy);
 
 							const vec_t vts = {sim_data_copy->h_y[1][survivIdx].x *constants::Gauss, sim_data_copy->h_y[1][survivIdx].y *constants::Gauss, sim_data_copy->h_y[1][survivIdx].z *constants::Gauss, 0.0};
@@ -513,7 +514,9 @@ void pp_disk::cpu_calc_grav_accel_SI( ttt_t curr_t, interaction_bound int_bound,
 							deallocate_host_storage(sim_data_copy);
 							delete sim_data_copy;
 
-							(*event_counter)++;					
+							(*event_counter)++;
+
+							
 						}
 					}
 				}
@@ -723,6 +726,8 @@ bool pp_disk::check_for_close_encounter(bool inner_steps)
 	{
 		const vec_t* r = sim_data->y[0];
 		const vec_t* v = sim_data->y[1];
+		const vec_t* rr = sim_data->h_y[0];
+		const vec_t* vv = sim_data->h_y[1];
 		interaction_bound int_bound = n_bodies->get_bound_SI();
 
 		for (int i = int_bound.sink.x; i < int_bound.sink.y; i++)
@@ -762,7 +767,7 @@ bool pp_disk::check_for_close_encounter(bool inner_steps)
 						const var_t mu1 = constants::Gauss2 * (get_mass_of_star() + sim_data->p[survivIdx].mass);
 						const var_t mu2 = constants::Gauss2 * (get_mass_of_star() + sim_data->p[mergerIdx].mass);
 
-						//printf prints original times, event stores transformed times
+						//printf prints original times, event stores transformed times, velocities
 
 						printf("t = %20.10le d = %20.10le %d. CLOSE_ENCOUNTER detected: id: %5d id: %5d\n", t/constants::Gauss, d, k+1, sim_data->body_md[survivIdx].id, sim_data->body_md[mergerIdx].id);
 
@@ -985,6 +990,14 @@ void pp_disk::swap()
 	for (int i = 0; i < 2; i++)
 	{
 		::swap(sim_data->yout[i], sim_data->y[i]);
+		if (COMPUTING_DEVICE_CPU == comp_dev)
+		{
+			::swap(sim_data->h_yout[i], sim_data->h_y[i]);
+		}
+		else
+		{
+			::swap(sim_data->d_yout[i], sim_data->d_y[i]);
+		}
 	}
 }
 
@@ -1142,6 +1155,7 @@ pp_disk::pp_disk(string& path, gas_disk *gd, int n_tpb, bool use_padded_storage,
 	t(0.0),
 	close_encounter(false),
 	inner_steps(true),
+	result_f(0x0),
 	sim_data(0x0),
 	n_bodies(0x0),
 	event_counter(0),
@@ -1407,7 +1421,7 @@ void pp_disk::clear_event_counter()
 
 int pp_disk::get_n_total_event()
 {
-	return (n_collision[EVENT_COUNTER_NAME_TOTAL] + n_ejection[EVENT_COUNTER_NAME_TOTAL] + n_hit_centrum[EVENT_COUNTER_NAME_TOTAL]);
+	return (n_collision[EVENT_COUNTER_NAME_TOTAL] + n_ejection[EVENT_COUNTER_NAME_TOTAL] + n_hit_centrum[EVENT_COUNTER_NAME_TOTAL] + n_close_encounter[EVENT_COUNTER_NAME_TOTAL]);
 }
 
 var_t pp_disk::get_mass_of_star()
@@ -1654,9 +1668,49 @@ void pp_disk::print_result_ascii(ostream& sout)
 	sout.flush();
 }
 
-void pp_disk::print_result_binary(ostream& sout)
+void pp_disk::print_result_binary(ostream& sout, ttt_t curr_t, vec_t* r, vec_t* v)
 {
-	throw string("print_result_binary() is not implemented");
+	//TODO: deal with the body_names
+
+	param_t* p = sim_data->h_p;
+	body_metadata_t* body_md = sim_data->h_body_md;
+	ttt_t tout = curr_t / constants::Gauss;
+
+	sout.write(reinterpret_cast<char *>(&tout),sizeof(tout)); //8 byte
+
+	int n = use_padded_storage ? n_bodies->get_n_prime_total() : n_bodies->get_n_total();
+	for (int i = 0; i < n; i++)
+	{
+		var_t vxout = v[i].x * constants::Gauss;
+		var_t vyout = v[i].y * constants::Gauss;
+		var_t vzout = v[i].z * constants::Gauss;
+
+		// Skip inactive bodies and padding particles and alike
+		if (body_md[i].id <= 0 || body_md[i].body_type >= BODY_TYPE_PADDINGPARTICLE)
+		{
+			continue;
+		}
+
+		sout.write(reinterpret_cast<char *>(&body_md[i].id),sizeof(body_md[i].id)); //4 byte
+		sout.write(body_names[i].c_str(),body_names[i].size() + 1); //length + 1 byte
+		sout.write(reinterpret_cast<char *>(&body_md[i].body_type),sizeof(body_md[i].body_type)); //4 byte
+
+		sout.write(reinterpret_cast<char *>(&p[i].mass),sizeof(p[i].mass)); //8 byte
+		sout.write(reinterpret_cast<char *>(&p[i].radius),sizeof(p[i].radius)); //8 byte
+		sout.write(reinterpret_cast<char *>(&p[i].density),sizeof(p[i].density)); //8 byte
+		sout.write(reinterpret_cast<char *>(&p[i].cd),sizeof(p[i].cd)); //8 byte
+
+		sout.write(reinterpret_cast<char *>(&body_md[i].mig_type),sizeof(body_md[i].mig_type)); //4 byte
+		sout.write(reinterpret_cast<char *>(&body_md[i].mig_stop_at),sizeof(body_md[i].mig_stop_at)); //8 byte
+
+		sout.write(reinterpret_cast<char *>(&r[i].x),sizeof(r[i].x)); //8 byte
+		sout.write(reinterpret_cast<char *>(&r[i].y),sizeof(r[i].y)); //8 byte
+		sout.write(reinterpret_cast<char *>(&r[i].z),sizeof(r[i].z)); //8 byte
+		sout.write(reinterpret_cast<char *>(&vxout),sizeof(vxout)); //8 byte
+		sout.write(reinterpret_cast<char *>(&vyout),sizeof(vyout)); //8 byte
+		sout.write(reinterpret_cast<char *>(&vzout),sizeof(vzout)); //8 byte
+	}
+	sout.flush();	
 }
 
 void pp_disk::print_event_data(ostream& sout, ostream& log_f)

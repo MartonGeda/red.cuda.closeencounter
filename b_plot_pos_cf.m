@@ -3,7 +3,7 @@
 % if save == true, then save figures
 save = false;
 
-for i = 32
+for i = 1
    if i == 1
       figure('Name',int2str(1),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
       subplot(1,2,1);

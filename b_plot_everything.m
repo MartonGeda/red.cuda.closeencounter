@@ -7,7 +7,7 @@ d_calculate_trueanomaly;
 d_calculate_angleofintersection;
 u = linspace(-pi,pi,1000);
 
-for i=2:5
+for i=1:20
     if (i==1)
         figure('Name',int2str(1),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
         
@@ -68,6 +68,13 @@ for i=2:5
 %         title('true anomaly');
 %         xlabel('time (day)');
 %         ylabel('v (rad)');
+
+%         subplot(3,3,8);
+%         plot(1.495978707e8*(phase1(1:pos(1),1) - phase2(1:pos(1),1)),1.495978707e8*(phase1(1:pos(1),2) - phase2(1:pos(1),2)),'*',0,0,'*');
+%         title('relative positions');
+%         xlabel('x (AU)');
+%         ylabel('y (AU)');
+%         axis equal;
 
         a1 = oe1(1,1);
         e1 = oe1(1,2);
@@ -217,6 +224,13 @@ for i=2:5
 %         xlabel('time (day)');
 %         ylabel('v (rad)');
 
+%         subplot(3,3,8);
+%         plot(1.495978707e8*(phase1((pos(i-1)+1):pos(i),1) - phase2((pos(i-1)+1):pos(i),1)),1.495978707e8*(phase1((pos(i-1)+1):pos(i),2) - phase2((pos(i-1)+1):pos(i),2)),'*',0,0,'*');
+%         title('relative positions');
+%         xlabel('x (AU)');
+%         ylabel('y (AU)');
+%         axis equal;
+
         a1 = oe1(pos(i-1)+1,1);
         e1 = oe1(pos(i-1)+1,2);
         w1 = oe1(pos(i-1)+1,4);
@@ -303,5 +317,29 @@ for i=2:5
             print('-dpng',strcat('All',int2str(i)));  
         end
     end    
+end
+
+%%
+
+for i = 87:N
+
+figure();
+subplot(1,2,1);
+plot(phase1((pos(i-1)+1):pos(i),1),phase1((pos(i-1)+1):pos(i),2),'*',phase2((pos(i-1)+1):pos(i),1),phase2((pos(i-1)+1):pos(i),2),'*');
+title('positions');
+xlabel('x (AU)');
+ylabel('y (AU)');
+lh = legend(int2str(id1(pos(i))),int2str(id2(pos(i))));
+set(lh,'Box','off');
+axis equal;
+
+subplot(1,2,2);
+plot(phase1((pos(i-1)+1):pos(i),1) - phase2((pos(i-1)+1):pos(i),1),phase1((pos(i-1)+1):pos(i),2) - phase2((pos(i-1)+1):pos(i),2),'*',0,0,'*');
+title('relative positions');
+xlabel('x (AU)');
+ylabel('y (AU)');
+axis equal;
+
+
 end
 

@@ -52,7 +52,7 @@ public:
 	/*   
 		\param sout print the data to this stream
 	*/
-	void print_result_binary(ostream& sout);
+	void print_result_binary(ostream& sout, ttt_t curr_t, vec_t* r, vec_t* v);
 	//! Print the event data
 	/*   
 		\param sout print the data to this stream
@@ -131,6 +131,8 @@ public:
 	int n_collision[	  EVENT_COUNTER_NAME_N];   //!< Number of collision
 	int n_close_encounter[EVENT_COUNTER_NAME_N];   //!< Number of close encounter
 	int n_event[		  EVENT_COUNTER_NAME_N];   //!< Number of total events
+
+	ostream* result_f;						//only for writing the datas in inner steps
 
 private:
 	void increment_event_counter(int *event_counter);

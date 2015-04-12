@@ -1,7 +1,7 @@
 %%Close encounter data
 clear all
 
-runnum = 2;
+runnum = 5;
 pc_laptop = 'D';            %'D' : pc, 'C' : laptop
 
 currentdir = strcat(pc_laptop,':\Work\ELTE\TDK\red.cuda\TestRun\CloseEncounter\2D\Run_',int2str(runnum),'\');
@@ -20,7 +20,7 @@ id1 = params(:,3);          %id of body1
 id2 = params(:,4);          %id of body2
 
 j = 1;
-for i=1:(length(params)-1)
+for i=1:(size(params,1)-1)
    if id1(i) ~= id1(i+1) || id2(i) ~= id2(i+1) || t(i+1) - t(i) > 1
        j = j + 1;
    end
@@ -32,15 +32,15 @@ j = 1;
 pos = zeros(N,1);           %position of the last step of close encounter
 timeofce = zeros(N,1);      %time of close encounter event
 
-for i=1:(length(params)-1)
+for i=1:(size(params,1)-1)
    if id1(i) ~= id1(i+1) || id2(i) ~= id2(i+1) || t(i+1) - t(i) > 1
        pos(j) = i;
        j = j + 1;
    end
 end
-pos(j) = length(params);
+pos(j) = size(params,1);
 
-for i=1:length(pos)
+for i=1:size(pos,1)
     if i==1
        params(1:pos(1),:) = sortrows(params(1:pos(1),:),1);
     else
@@ -86,7 +86,7 @@ mu2 = 0.01720209895^2*(1+m2);
 h1 = 0.5*absv1.^2 - mu1./absr1;
 h2 = 0.5*absv2.^2 - mu2./absr2;
 
-dh = zeros(length(params),1);
+dh = zeros(size(params,1),1);
 for i=1:N
     if (i==1)
        dh(1:pos(1)) = ((h1(1:pos(1)) + h2(1:pos(1))) / 2) - ((h1(1) + h2(1)) / 2);
@@ -104,79 +104,158 @@ for i=1:N
    end
 end
 
-%% ascii result
+%% binary result
 
-runnum = 3;
+runnum = 5;
 pc_laptop = 'D';            %'D' : pc, 'C' : laptop
 
+nob = 1001;         %number of bodies
+
 currentdir = strcat(pc_laptop,':\Work\ELTE\TDK\red.cuda\TestRun\CloseEncounter\2D\Run_',int2str(runnum),'\');
+fid = fopen(strcat(currentdir,'D_cpu_ns_as_RKF8_result.bin'));
+fileInfo = dir(strcat(currentdir,'D_cpu_ns_as_RKF8_result.bin'));
+fileSize = fileInfo.bytes;
+
+id = zeros(ceil(fileSize / (8 + (4+6+4+4*8+4+8+6*8)*nob)),nob); %average size of names is set to 5+1 byte
+tres = zeros(ceil(fileSize / (8 + (4+6+4+4*8+4+8+6*8)*nob)),1);
+xres = zeros(ceil(fileSize / (8 + (4+6+4+4*8+4+8+6*8)*nob)),nob);
+yres = zeros(ceil(fileSize / (8 + (4+6+4+4*8+4+8+6*8)*nob)),nob);
+zres = zeros(ceil(fileSize / (8 + (4+6+4+4*8+4+8+6*8)*nob)),nob);
+vxres = zeros(ceil(fileSize / (8 + (4+6+4+4*8+4+8+6*8)*nob)),nob);
+vyres = zeros(ceil(fileSize / (8 + (4+6+4+4*8+4+8+6*8)*nob)),nob);
+vzres = zeros(ceil(fileSize / (8 + (4+6+4+4*8+4+8+6*8)*nob)),nob);
+name = cell(nob,1);
+mass = zeros(ceil(fileSize / (8 + (4+6+4+4*8+4+8+6*8)*nob)),nob);
+radius = zeros(ceil(fileSize / (8 + (4+6+4+4*8+4+8+6*8)*nob)),nob);
+density = zeros(ceil(fileSize / (8 + (4+6+4+4*8+4+8+6*8)*nob)),nob);
+
+i = 1;
+
+while fileSize ~= ftell(fid)
+    tres(i) = fread(fid,1,'double');
+    for j = 1:nob
+        tmp = 1;
+        n = char.empty(0,1);
+        id(i,j) = fread(fid,1,'int');
+        while tmp
+            tmp = fread(fid,1,'*char')';
+            n = strcat(n,tmp);
+        end
+        name{j} = n;
+        type = fread(fid,1,'int');     % type
+        mass(i,j) = fread(fid,1,'double');
+        radius(i,j) = fread(fid,1,'double');
+        density(i,j) = fread(fid,1,'double');
+        fread(fid,1,'double');      % cd
+        
+        fread(fid,1,'int');      % migration type
+        fread(fid,1,'double');      % migration stop at
+        
+        xres(i,j) = fread(fid,1,'double');
+        yres(i,j) = fread(fid,1,'double');
+        zres(i,j) = fread(fid,1,'double');
+        vxres(i,j) = fread(fid,1,'double');
+        vyres(i,j) = fread(fid,1,'double');
+        vzres(i,j) = fread(fid,1,'double');
+    end
+    i = i+1;
+end
+
+fclose(fid);
+
+tmp = find(id(:,1) == 0,1,'first') - 1;
+
+id = id(1:tmp,:);
+tres = tres(1:tmp,:);
+xres = xres(1:tmp,:);
+yres = yres(1:tmp,:);
+zres = zres(1:tmp,:);
+vxres = vxres(1:tmp,:);
+vyres = vyres(1:tmp,:);
+vzres = vzres(1:tmp,:);
+mass = mass(1:tmp,:);
+radius = radius(1:tmp,:);
+density = density(1:tmp,:);
+
+absrres = sqrt(xres.^2 + yres.^2 + zres.^2);
+absvres = sqrt(vxres.^2 + vyres.^2 + vzres.^2);
+hres = 0.5*absvres.^2 - 0.01720209895^2*(1+mass)./absrres; 
+
+%% ascii result
+
+% runnum = 3;
+% pc_laptop = 'D';            %'D' : pc, 'C' : laptop
+% 
+% currentdir = strcat(pc_laptop,':\Work\ELTE\TDK\red.cuda\TestRun\CloseEncounter\2D\Run_',int2str(runnum),'\');
 rawparams = importdata(strcat(currentdir,'D_cpu_ns_as_RKF8_result.txt'));
 
-id = zeros(length(rawparams.textdata),1);
-for i=1:length(rawparams.textdata)
+id = zeros(size(rawparams.textdata,1),1);
+for i=1:size(rawparams.textdata,1)
     id(i) = str2double(rawparams.textdata{i,1});
 end
 
 % number of bodies
-Nres = max(unique(id));
+nob = max(unique(id));
 
 paramsres = [id rawparams.data];
 clear id
 clear rawparams
 
-tres = paramsres(1:Nres:end,3);            %time in days
+tres = paramsres(1:nob:end,3);            %time in days
 
-x = zeros(length(tres),Nres);           %x coord
-y = zeros(length(tres),Nres);           %y coord
-z = zeros(length(tres),Nres);           %z coord
-vx = zeros(length(tres),Nres);          %x velocity
-vy = zeros(length(tres),Nres);          %y velocity
-vz = zeros(length(tres),Nres);          %z velocity
+xres = zeros(length(tres),nob);           %x coord
+yres = zeros(length(tres),nob);           %y coord
+zres = zeros(length(tres),nob);           %z coord
+vxres = zeros(length(tres),nob);          %x velocity
+vyres = zeros(length(tres),nob);          %y velocity
+vzres = zeros(length(tres),nob);          %z velocity
 
-for i=1:length(tres)
+for i=1:size(tres,1)
     if i == 1
-        x(1,1:Nres) = paramsres(1:Nres,10);
-        y(1,1:Nres) = paramsres(1:Nres,11);
-        z(1,1:Nres) = paramsres(1:Nres,12);
-        vx(1,1:Nres) = paramsres(1:Nres,13);
-        vy(1,1:Nres) = paramsres(1:Nres,14);
-        vz(1,1:Nres) = paramsres(1:Nres,15);
+        xres(1,1:nob) = paramsres(1:nob,10);
+        yres(1,1:nob) = paramsres(1:nob,11);
+        zres(1,1:nob) = paramsres(1:nob,12);
+        vxres(1,1:nob) = paramsres(1:nob,13);
+        vyres(1,1:nob) = paramsres(1:nob,14);
+        vzres(1,1:nob) = paramsres(1:nob,15);
     else
-       x(i,1:Nres) = paramsres((i-1)*Nres+1 : i*Nres,10);
-       y(i,1:Nres) = paramsres((i-1)*Nres+1 : i*Nres,11);
-       z(i,1:Nres) = paramsres((i-1)*Nres+1 : i*Nres,12);
-       vx(i,1:Nres) = paramsres((i-1)*Nres+1 : i*Nres,13);
-       vy(i,1:Nres) = paramsres((i-1)*Nres+1 : i*Nres,14);
-       vz(i,1:Nres) = paramsres((i-1)*Nres+1 : i*Nres,15);
+       xres(i,1:nob) = paramsres((i-1)*nob+1 : i*nob,10);
+       yres(i,1:nob) = paramsres((i-1)*nob+1 : i*nob,11);
+       zres(i,1:nob) = paramsres((i-1)*nob+1 : i*nob,12);
+       vxres(i,1:nob) = paramsres((i-1)*nob+1 : i*nob,13);
+       vyres(i,1:nob) = paramsres((i-1)*nob+1 : i*nob,14);
+       vzres(i,1:nob) = paramsres((i-1)*nob+1 : i*nob,15);
     end
 end
 
-hres = 0.5*(vx.^2 + vy.^2 + vz.^2) - 0.01720209895^2*(1+m1(1))./sqrt(x.^2 + y.^2 + z.^2);
+absrres = sqrt(xres.^2 + yres.^2 + zres.^2);
+absvres = sqrt(vxres.^2 + vyres.^2 + vzres.^2);
+hres = 0.5*absvres.^2 - 0.01720209895^2*(1+m1(1))./absrres;     % if masses are not equal it doesn't work!!
 
 
 
 %% distances
 
 % matching t, tres
-idx = zeros(length(tres),1);
-m = zeros(length(tres),1);
-for i=1:length(tres)
+idx = zeros(size(tres,1),1);
+m = zeros(size(tres,1),1);
+for i=1:size(tres,1)
    [m(i), idx(i)] = min(abs(t - tres(i)));   
 end
 
 % calculate distances from mass center of the bodies
-dres = zeros(size(x));
+dres = zeros(size(xres));
 
-for i=1:length(dres)
-    tmp = [(x(i,id1(idx(i))) + x(i,id2(idx(i)))) / 2, (y(i,id1(idx(i))) + y(i,id2(idx(i)))) / 2, (z(i,id1(idx(i))) + z(i,id2(idx(i)))) / 2 ];
+for i=1:size(dres,1)
+    tmp = [(xres(i,id1(idx(i))) + xres(i,id2(idx(i)))) / 2, (yres(i,id1(idx(i))) + yres(i,id2(idx(i)))) / 2, (zres(i,id1(idx(i))) + zres(i,id2(idx(i)))) / 2 ];
     %tmp = [x(i,id1(idx(i))), y(i,id1(idx(i))), z(i,id1(idx(i)))];
-    dres(i,:) = sqrt( (x(i,:) - tmp(1)).^2 + (y(i,:) - tmp(2)).^2 + (z(i,:) - tmp(3)).^2 );
+    dres(i,:) = sqrt( (xres(i,:) - tmp(1)).^2 + (yres(i,:) - tmp(2)).^2 + (zres(i,:) - tmp(3)).^2 );
 end
 [dres, ind]= sort(dres,2);
 
-idx = zeros(length(pos),2);
+idx = zeros(size(pos,1),2);
 
-for i=1:length(pos)
+for i=1:size(pos,1)
     if i == 1
         [~, idx(1,1)] = min(abs(t(1) - tres));
         [~, idx(1,2)] = min(abs(t(pos(1)) - tres));

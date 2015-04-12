@@ -40,6 +40,7 @@ void parameter::create_default_parameters()
 	start_time         = 0.0;
 	simulation_length  = 0.0;
 	output_interval    = 0.0;
+	output_type		   = OUTPUT_TYPE_TEXT;
 
 	// TODO: set these values to 0.0 indicating that these were not defined by the user
 	thrshld[THRESHOLD_HIT_CENTRUM_DISTANCE] = 0.0;      // AU
@@ -236,6 +237,21 @@ void parameter::set_param(string& key, string& value)
 			throw string("Invalid number at: " + key);
 		}
 		thrshld[THRESHOLD_RADII_ENHANCE_FACTOR] = atof(value.c_str());
+	}
+	else if (key == "output_type")
+	{
+		if      (value == "text" || value == "ascii")
+		{
+			output_type = OUTPUT_TYPE_TEXT;
+		}
+		else if (value == "binary")
+		{
+			output_type = OUTPUT_TYPE_BINARY;
+		}
+		else
+		{
+			throw string("Invalid value at: " + key);
+		}		
 	}
 	else
 	{
