@@ -1,13 +1,18 @@
 %% plot pos,vel,cf,oe,(v),ellipses before, ellipses after
-
+tic;
 % if save == true, then save figures
-save = false;
+savepic = true;
 
 d_calculate_trueanomaly;
 d_calculate_angleofintersection;
 u = linspace(-pi,pi,1000);
 
-for i=1:20
+%[~,i] = sort(Cf);
+%figure('Name',int2str(1),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
+%j = 1;
+
+%for i=i(1)'
+for i=1:N
     if (i==1)
         figure('Name',int2str(1),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
         
@@ -40,25 +45,29 @@ for i=1:20
         ylabel('radii enhance factor');
         
         subplot(3,3,4);
-        plot(t(1:pos(1)) - t(1),oe1(1:pos(1),1),'*',t(1:pos(1)) - t(1),oe2(1:pos(1),1),'*');
+        %plot(t(1:pos(1)) - t(1),oe1(1:pos(1),1),'*',t(1:pos(1)) - t(1),oe2(1:pos(1),1),'*');
+        plot(t(1:pos(1)) - t(1),abs(oe1(1:pos(1),1) - oe2(1:pos(1),1)),'*','Color','m');
         title('semimajor axis');
         xlabel('time (day)');
         ylabel('a (AU)');
         
         subplot(3,3,5);
-        plot(t(1:pos(1)) - t(1),oe1(1:pos(1),2),'*',t(1:pos(1)) - t(1),oe2(1:pos(1),2),'*');
+        %plot(t(1:pos(1)) - t(1),oe1(1:pos(1),2),'*',t(1:pos(1)) - t(1),oe2(1:pos(1),2),'*');
+        plot(t(1:pos(1)) - t(1),abs(oe1(1:pos(1),2) - oe2(1:pos(1),2)),'*','Color','m');
         title('eccentricity');
         xlabel('time (day)');
         ylabel('e (-)');
         
         subplot(3,3,6);
-        plot(t(1:pos(1)) - t(1),oe1(1:pos(1),4),'*',t(1:pos(1)) - t(1),oe2(1:pos(1),4),'*');
+        %plot(t(1:pos(1)) - t(1),oe1(1:pos(1),4),'*',t(1:pos(1)) - t(1),oe2(1:pos(1),4),'*');
+        plot(t(1:pos(1)) - t(1),abs(oe1(1:pos(1),4) - oe2(1:pos(1),4)),'*','Color','m');
         title('argument of pericenter');
         xlabel('time (day)');
         ylabel('w (rad)');
          
         subplot(3,3,7);
-        plot(t(1:pos(1)) - t(1),oe1(1:pos(1),6),'*',t(1:pos(1)) - t(1),oe2(1:pos(1),6),'*');
+        %plot(t(1:pos(1)) - t(1),oe1(1:pos(1),6),'*',t(1:pos(1)) - t(1),oe2(1:pos(1),6),'*');
+        plot(t(1:pos(1)) - t(1),abs(oe1(1:pos(1),6) - oe2(1:pos(1),6)),'*','Color','m');
         title('mean anomaly');
         xlabel('time (day)');
         ylabel('M (rad)');
@@ -152,19 +161,24 @@ for i=1:20
         cellStyle.setHorizontalAlignment(cellStyle.CENTER);
         jTable.repaint;
         
-        suptitle(sprintf('time t = %5.2f day, time of event \\Deltat = %1.3f day, angle of intersection \\Phi = %2.2f°, cf_{min} = %1.4f',t(1),timeofce(1),alpha(1),Cf(1)));
+        [fmin,imin] = min(fij(1:pos(1)));
+        [fmax,imax] = max(fij(1:pos(1)));
         
-        if(save)
+        suptitle(sprintf('time t = %5.2f day, time of event \\Deltat = %1.3f day, angle of intersection \\Phi = %2.2f°, cf_{min} = %1.4f  \n ratio of the min forces F_{ij} : F_s : F_k = %g : %1.1g : %1.1g \t ratio of the max forces F_{ij} : F_s : F_k = %g : %1.1g : %1.1g',t(1),timeofce(1),alpha(1),Cf(1),1,fsun(imin,1)/fmin,forces(indx2(imin),3)/fmin,1,fsun(imax,1)/fmax,forces(indx2(imax),3)/fmax ));
+        
+        if(savepic)
 %             if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))),'dir'))
 %                 mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
 %             end
 %             cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
             set(gcf,'PaperPositionMode','auto');
             print('-dpng',strcat('All',int2str(1)));  
+            %print('-dpng',strcat('All',int2str(j),'_',int2str(j),'a'));
+            %j = j+1;
         end
 
     else
-        figure('Name',int2str(i),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
+        %figure('Name',int2str(i),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
         
         subplot(3,3,1);
         plot(phase1(pos(i-1)+1:pos(i),1),phase1(pos(i-1)+1:pos(i),2),'*',phase2(pos(i-1)+1:pos(i),1),phase2(pos(i-1)+1:pos(i),2),'*');
@@ -195,25 +209,29 @@ for i=1:20
         ylabel('radii enhance factor');
         
         subplot(3,3,4);
-        plot(t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),oe1((pos(i-1)+1):pos(i),1),'*',t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),oe2((pos(i-1)+1):pos(i),1),'*');
+        %plot(t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),oe1((pos(i-1)+1):pos(i),1),'*',t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),oe2((pos(i-1)+1):pos(i),1),'*');
+        plot(t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),abs(oe1((pos(i-1)+1):pos(i),1) - oe2((pos(i-1)+1):pos(i),1)),'*','Color','m');
         title('semimajor axis');
         xlabel('time (day)');
         ylabel('a (AU)');
         
         subplot(3,3,5);
-        plot(t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),oe1((pos(i-1)+1):pos(i),2),'*',t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),oe2((pos(i-1)+1):pos(i),2),'*');
+        %plot(t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),oe1((pos(i-1)+1):pos(i),2),'*',t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),oe2((pos(i-1)+1):pos(i),2),'*');
+        plot(t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),abs(oe1((pos(i-1)+1):pos(i),2) - oe2((pos(i-1)+1):pos(i),2)),'*','Color','m');
         title('eccentricity');
         xlabel('time (day)');
         ylabel('e (-)');
         
         subplot(3,3,6);
-        plot(t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),oe1((pos(i-1)+1):pos(i),4),'*',t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),oe2((pos(i-1)+1):pos(i),4),'*');
+        %plot(t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),oe1((pos(i-1)+1):pos(i),4),'*',t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),oe2((pos(i-1)+1):pos(i),4),'*');
+        plot(t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),abs(oe1((pos(i-1)+1):pos(i),4) - oe2((pos(i-1)+1):pos(i),4)),'*','Color','m');
         title('argument of pericenter');
         xlabel('time (day)');
         ylabel('w (rad)');
         
         subplot(3,3,7);
-        plot(t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),oe1((pos(i-1)+1):pos(i),6),'*',t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),oe2((pos(i-1)+1):pos(i),6),'*');
+        %plot(t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),oe1((pos(i-1)+1):pos(i),6),'*',t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),oe2((pos(i-1)+1):pos(i),6),'*');
+        plot(t((pos(i-1)+1):pos(i)) - t(pos(i-1)+1),abs(oe1((pos(i-1)+1):pos(i),6) - oe2((pos(i-1)+1):pos(i),6)),'*','Color','m');
         title('mean anomaly');
         xlabel('time (day)');
         ylabel('M (rad)');  
@@ -306,19 +324,26 @@ for i=1:20
         cellStyle.setHorizontalAlignment(cellStyle.CENTER);
         jTable.repaint;
         
-        suptitle(sprintf('time t = %5.2f day, time of event \\Deltat = %1.3f day, angle of intersection \\Phi = %2.2f°, cf_{min} = %1.4f',t(pos(i-1)+1),timeofce(i),alpha(i),Cf(i)));  
+        [fmin,imin] = min(fij(pos(i-1)+1:pos(i)));
+        [fmax,imax] = max(fij(pos(i-1)+1:pos(i)));
+        imin = imin + pos(i-1);
+        imax = imax + pos(i-1);
+        
+        suptitle(sprintf('time t = %5.2f day, time of event \\Deltat = %1.3f day, angle of intersection \\Phi = %2.2f°, cf_{min} = %1.4f  \n ratio of the min forces F_{ij} : F_s : F_k = %g : %1.1g : %1.1g \t ratio of the max forces F_{ij} : F_s : F_k = %g : %1.1g : %1.1g',t(pos(i-1)+1),timeofce(i),alpha(i),Cf(i),1,fsun(imin,1)/fmin,forces(indx2(imin),3)/fmin,1,fsun(imax,1)/fmax,forces(indx2(imax),3)/fmax ));  
 
-        if(save)
+        if(savepic)
 %             if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))),'dir'))
 %                 mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
 %             end
 %             cd(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
             set(gcf,'PaperPositionMode','auto');
             print('-dpng',strcat('All',int2str(i)));  
+            %print('-dpng',strcat('All',int2str(j),'_',int2str(j),'a'));
+            %j = j+1;
         end
     end    
 end
-
+toc;
 %%
 
 for i = 87:N

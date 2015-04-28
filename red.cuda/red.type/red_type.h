@@ -35,6 +35,13 @@ typedef enum output_type
 			OUTPUT_TYPE_N
 		} output_type_t;
 
+typedef enum frame_center
+		{
+			FRAME_CENTER_ASTRO,
+			FRAME_CENTER_BARY,
+			FRAME_CENTER_N
+		} frame_center_t;
+
 typedef enum threshold
 		{
 			THRESHOLD_HIT_CENTRUM_DISTANCE,

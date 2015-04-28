@@ -133,6 +133,7 @@ public:
 	int n_event[		  EVENT_COUNTER_NAME_N];   //!< Number of total events
 
 	ostream* result_f;						//only for writing the datas in inner steps
+	frame_center_t frame_center;			//bary or astro
 
 private:
 	void increment_event_counter(int *event_counter);

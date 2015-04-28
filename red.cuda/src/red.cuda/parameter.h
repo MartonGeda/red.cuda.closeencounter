@@ -26,7 +26,8 @@ public:
 	bool_t close_encounter;		  //! Collisions are disabled
 	bool_t inner_steps;			  //! Collisions, close encounters are calculated in the inner steps
 
-	output_type_t output_type;  //! type of the output files (results) (binary or text)
+	output_type_t output_type;	  //! type of the output files (results) (binary or text)
+	frame_center_t frame_center;  //! type of frame center (astrocentric or barycentric)
 
 	ttt_t start_time;             //! start time of the simulation [day]
 	ttt_t simulation_length;      //! length of the simulation [day]

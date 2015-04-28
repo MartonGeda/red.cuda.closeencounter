@@ -1,7 +1,7 @@
 %% plot energies
 
 % if save == true, then save figures
-save = false;
+savepic = false;
 
 d_calculate_trueanomaly;
 d_calculate_angleofintersection;
@@ -59,7 +59,7 @@ for i = 1:N
         
         suptitle(sprintf('time t = %5.2f day, time of event \\Deltat = %1.3f day, angle of intersection \\Phi = %2.2f°, cf_{min} = %1.4f',t(1),timeofce(1),alpha(1),Cf(1)));
         
-        if(save)
+        if(savepic)
 %             if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))),'dir'))
 %                 mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(1))));
 %             end
@@ -119,7 +119,7 @@ for i = 1:N
          
         suptitle(sprintf('time t = %5.2f day, time of event \\Deltat = %1.3f day, angle of intersection \\Phi = %2.2f°, cf_{min} = %1.4f',t(pos(i-1)+1),timeofce(i),alpha(i),Cf(i)));  
 
-        if(save)
+        if(savepic)
 %             if(~exist(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))),'dir'))
 %                 mkdir(strcat(currentdir,'\Events\',strcat('CloseEn',int2str(i))));
 %             end

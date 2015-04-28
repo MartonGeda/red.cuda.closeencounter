@@ -41,6 +41,7 @@ void parameter::create_default_parameters()
 	simulation_length  = 0.0;
 	output_interval    = 0.0;
 	output_type		   = OUTPUT_TYPE_TEXT;
+	frame_center	   = FRAME_CENTER_BARY;
 
 	// TODO: set these values to 0.0 indicating that these were not defined by the user
 	thrshld[THRESHOLD_HIT_CENTRUM_DISTANCE] = 0.0;      // AU
@@ -247,6 +248,21 @@ void parameter::set_param(string& key, string& value)
 		else if (value == "binary")
 		{
 			output_type = OUTPUT_TYPE_BINARY;
+		}
+		else
+		{
+			throw string("Invalid value at: " + key);
+		}		
+	}
+	else if (key == "frame_center")
+	{
+		if      (value == "astro")
+		{
+			frame_center = FRAME_CENTER_ASTRO;
+		}
+		else if (value == "bary")
+		{
+			frame_center = FRAME_CENTER_BARY;
 		}
 		else
 		{

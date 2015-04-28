@@ -1,5 +1,5 @@
 %%Close encounter data
-clear all
+%clear all
 
 runnum = 5;
 pc_laptop = 'D';            %'D' : pc, 'C' : laptop
@@ -104,8 +104,11 @@ for i=1:N
    end
 end
 
-%% binary result
+fij = 0.01720209895^2 * m1.* m2 ./ d.^2;
+fsun = [0.01720209895^2 * 1.* m1 ./ (phase1(:,1).^2 + phase1(:,2).^2 + phase1(:,3).^2), 0.01720209895^2 * 1.* m2 ./ (phase2(:,1).^2 + phase2(:,2).^2 + phase2(:,3).^2)];
 
+%% binary result
+tic;
 runnum = 5;
 pc_laptop = 'D';            %'D' : pc, 'C' : laptop
 
@@ -181,12 +184,13 @@ absrres = sqrt(xres.^2 + yres.^2 + zres.^2);
 absvres = sqrt(vxres.^2 + vyres.^2 + vzres.^2);
 hres = 0.5*absvres.^2 - 0.01720209895^2*(1+mass)./absrres; 
 
+toc;
 %% ascii result
+tic;
+runnum = 3;
+pc_laptop = 'D';            %'D' : pc, 'C' : laptop
 
-% runnum = 3;
-% pc_laptop = 'D';            %'D' : pc, 'C' : laptop
-% 
-% currentdir = strcat(pc_laptop,':\Work\ELTE\TDK\red.cuda\TestRun\CloseEncounter\2D\Run_',int2str(runnum),'\');
+currentdir = strcat(pc_laptop,':\Work\ELTE\TDK\red.cuda\TestRun\CloseEncounter\2D\Run_',int2str(runnum),'\');
 rawparams = importdata(strcat(currentdir,'D_cpu_ns_as_RKF8_result.txt'));
 
 id = zeros(size(rawparams.textdata,1),1);
@@ -231,27 +235,37 @@ end
 absrres = sqrt(xres.^2 + yres.^2 + zres.^2);
 absvres = sqrt(vxres.^2 + vyres.^2 + vzres.^2);
 hres = 0.5*absvres.^2 - 0.01720209895^2*(1+m1(1))./absrres;     % if masses are not equal it doesn't work!!
-
+toc;
 
 
 %% distances
 
 % matching t, tres
-idx = zeros(size(tres,1),1);
-m = zeros(size(tres,1),1);
+indx1 = zeros(size(tres,1),1);
+%m = zeros(size(tres,1),1);
 for i=1:size(tres,1)
-   [m(i), idx(i)] = min(abs(t - tres(i)));   
+   [~, indx1(i)] = min(abs(t - tres(i)));   
+end
+
+% matching tres, t
+indx2 = zeros(size(t,1),1);
+%m = zeros(size(tres,1),1);
+for i=1:size(t,1)
+   [~, indx2(i)] = min(abs(t(i) - tres));   
 end
 
 % calculate distances from mass center of the bodies
 dres = zeros(size(xres));
 
 for i=1:size(dres,1)
-    tmp = [(xres(i,id1(idx(i))) + xres(i,id2(idx(i)))) / 2, (yres(i,id1(idx(i))) + yres(i,id2(idx(i)))) / 2, (zres(i,id1(idx(i))) + zres(i,id2(idx(i)))) / 2 ];
+    tmp = [(xres(i,id1(indx1(i))) + xres(i,id2(indx1(i)))) / 2, (yres(i,id1(indx1(i))) + yres(i,id2(indx1(i)))) / 2, (zres(i,id1(indx1(i))) + zres(i,id2(indx1(i)))) / 2 ];
     %tmp = [x(i,id1(idx(i))), y(i,id1(idx(i))), z(i,id1(idx(i)))];
     dres(i,:) = sqrt( (xres(i,:) - tmp(1)).^2 + (yres(i,:) - tmp(2)).^2 + (zres(i,:) - tmp(3)).^2 );
 end
 [dres, ind]= sort(dres,2);
+
+% ONLY IF THE MASSES ARE EQUAL
+forces = 0.01720209895^2 * m1(1) * m2(1) ./ dres.^2;
 
 idx = zeros(size(pos,1),2);
 

@@ -165,11 +165,11 @@ int main(int argc, const char** argv, const char** env)
 
 		if (opt.param->output_type == OUTPUT_TYPE_TEXT)
 		{
-			//ppd->print_result_ascii(*result_f);
+			ppd->print_result_ascii(*result_f);
 		}
 		else
 		{
-			//ppd->print_result_binary(*result_f, ppd->t, ppd->sim_data->h_y[0], ppd->sim_data->h_y[1]);
+			ppd->print_result_binary(*result_f, ppd->t, ppd->sim_data->h_y[0], ppd->sim_data->h_y[1]);
 		}
 
 		//int dummy_k = 0;
@@ -190,11 +190,11 @@ int main(int argc, const char** argv, const char** env)
 				}
 				if (opt.param->output_type == OUTPUT_TYPE_TEXT)
 				{
-					//ppd->print_result_ascii(*result_f);
+					ppd->print_result_ascii(*result_f);
 				}
 				else
 				{
-					//ppd->print_result_binary(*result_f, ppd->t, ppd->sim_data->h_y[0], ppd->sim_data->h_y[1]);
+					ppd->print_result_binary(*result_f, ppd->t, ppd->sim_data->h_y[0], ppd->sim_data->h_y[1]);
 				}
 			}
 
@@ -272,11 +272,11 @@ int main(int argc, const char** argv, const char** env)
 			}
 			if (opt.param->output_type == OUTPUT_TYPE_TEXT)
 			{
-				//ppd->print_result_ascii(*result_f);
+				ppd->print_result_ascii(*result_f);
 			}
 			else
 			{
-				//ppd->print_result_binary(*result_f, ppd->t, ppd->sim_data->h_y[0], ppd->sim_data->h_y[1]);
+				ppd->print_result_binary(*result_f, ppd->t, ppd->sim_data->h_y[0], ppd->sim_data->h_y[1]);
 			}
 		}
 		// Needed by nvprof.exe

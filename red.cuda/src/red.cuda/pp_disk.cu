@@ -403,6 +403,7 @@ void pp_disk::set_kernel_launch_param(int n_data)
 
 void pp_disk::cpu_calc_grav_accel_SI( ttt_t curr_t, interaction_bound int_bound, const body_metadata_t* body_md, const param_t* p, const vec_t* r, const vec_t* v, vec_t* a, event_data_t* events, int *event_counter)
 {
+	// astrocentric ( + 1 )
 	for (int i = int_bound.sink.x; i < int_bound.sink.y; i++)
 	{
 		a[i].x = a[i].y = a[i].z = a[i].w = 0.0;
@@ -477,6 +478,16 @@ void pp_disk::cpu_calc_grav_accel_SI( ttt_t curr_t, interaction_bound int_bound,
 						{
 							printf("t = %20.10le d = %20.10le %d. CLOSE_ENCOUNTER detected: id: %5d id: %5d\n", curr_t/constants::Gauss, d, k+1, body_md[survivIdx].id, body_md[mergerIdx].id);
 
+							//vec_t R0 = {0.0, 0.0, 0.0, 0.0};
+							//vec_t V0 = {0.0, 0.0, 0.0, 0.0};
+
+							//tools::get_star_bc_phase(n_bodies->get_n_total(), false, sim_data, &R0, &V0);
+
+							//vec_t rs = {r[survivIdx].x - R0.x, r[survivIdx].y - R0.y, r[survivIdx].z - R0.z, 0};
+							//vec_t vs = {v[survivIdx].x - V0.x, v[survivIdx].y - V0.y, v[survivIdx].z - V0.z, 0};
+							//vec_t rm = {r[mergerIdx].x - R0.x, r[mergerIdx].y - R0.y, r[mergerIdx].z - R0.z, 0};
+							//vec_t vm = {v[mergerIdx].x - V0.x, v[mergerIdx].y - V0.y, v[mergerIdx].z - V0.z, 0};
+
 							events[k].event_name = EVENT_NAME_CLOSE_ENCOUNTER;
 							events[k].d = d;
 							events[k].t = curr_t;
@@ -490,29 +501,44 @@ void pp_disk::cpu_calc_grav_accel_SI( ttt_t curr_t, interaction_bound int_bound,
 							events[k].v1 = v[survivIdx];
 							events[k].r2 = r[mergerIdx];
 							events[k].v2 = v[mergerIdx];
+							//events[k].r1 = rs;
+							//events[k].v1 = vs;
+							//events[k].r2 = rm;
+							//events[k].v2 = vm;
 
- 							sim_data_t* sim_data_copy = new sim_data_t;
-							allocate_host_storage(sim_data_copy, n_bodies->get_n_total());
-
-							for (int i = 0; i < n_bodies->get_n_total(); i++)
+							if (frame_center == FRAME_CENTER_BARY)
 							{
-								sim_data_copy->h_body_md[i] = body_md[i];
-								sim_data_copy->h_y[0][i] = r[i];
-								sim_data_copy->h_y[1][i] = v[i];
+ 								sim_data_t* sim_data_copy = new sim_data_t;
+								allocate_host_storage(sim_data_copy, n_bodies->get_n_total());
+
+								for (int i = 0; i < n_bodies->get_n_total(); i++)
+								{
+									sim_data_copy->h_body_md[i] = body_md[i];
+									sim_data_copy->h_y[0][i] = r[i];
+									sim_data_copy->h_y[1][i] = v[i];
+								}
+
+								//print_result_binary(*result_f, curr_t, sim_data_copy->h_y[0], sim_data_copy->h_y[1]); 
+
+								transform_to_ac(false, sim_data_copy);
+
+								const vec_t vts = {sim_data_copy->h_y[1][survivIdx].x *constants::Gauss, sim_data_copy->h_y[1][survivIdx].y *constants::Gauss, sim_data_copy->h_y[1][survivIdx].z *constants::Gauss, 0.0};
+								const vec_t vtm = {sim_data_copy->h_y[1][mergerIdx].x *constants::Gauss, sim_data_copy->h_y[1][mergerIdx].y *constants::Gauss, sim_data_copy->h_y[1][mergerIdx].z *constants::Gauss, 0.0};
+
+								tools::calculate_orbital_element(mu1, &events[k].oe1, sim_data_copy->h_y[0][survivIdx], vts);
+								tools::calculate_orbital_element(mu2, &events[k].oe2, sim_data_copy->h_y[0][mergerIdx], vtm);	
+
+								deallocate_host_storage(sim_data_copy);
+								delete sim_data_copy;
 							}
+							else if (frame_center == FRAME_CENTER_ASTRO)
+							{
+								const vec_t vts = {v[survivIdx].x *constants::Gauss, v[survivIdx].y *constants::Gauss, v[survivIdx].z *constants::Gauss, 0.0};
+								const vec_t vtm = {v[mergerIdx].x *constants::Gauss, v[mergerIdx].y *constants::Gauss, v[mergerIdx].z *constants::Gauss, 0.0};
 
-							//print_result_binary(*result_f, curr_t, sim_data_copy->h_y[0], sim_data_copy->h_y[1]); 
-
-							transform_to_ac(false, sim_data_copy);
-
-							const vec_t vts = {sim_data_copy->h_y[1][survivIdx].x *constants::Gauss, sim_data_copy->h_y[1][survivIdx].y *constants::Gauss, sim_data_copy->h_y[1][survivIdx].z *constants::Gauss, 0.0};
-							const vec_t vtm = {sim_data_copy->h_y[1][mergerIdx].x *constants::Gauss, sim_data_copy->h_y[1][mergerIdx].y *constants::Gauss, sim_data_copy->h_y[1][mergerIdx].z *constants::Gauss, 0.0};
-
-							tools::calculate_orbital_element(mu1, &events[k].oe1, sim_data_copy->h_y[0][survivIdx], vts);
-							tools::calculate_orbital_element(mu2, &events[k].oe2, sim_data_copy->h_y[0][mergerIdx], vtm);	
-
-							deallocate_host_storage(sim_data_copy);
-							delete sim_data_copy;
+								tools::calculate_orbital_element(mu1, &events[k].oe1, r[survivIdx], vts);
+								tools::calculate_orbital_element(mu2, &events[k].oe2, r[mergerIdx], vtm);
+							}
 
 							(*event_counter)++;
 
@@ -726,8 +752,6 @@ bool pp_disk::check_for_close_encounter(bool inner_steps)
 	{
 		const vec_t* r = sim_data->y[0];
 		const vec_t* v = sim_data->y[1];
-		const vec_t* rr = sim_data->h_y[0];
-		const vec_t* vv = sim_data->h_y[1];
 		interaction_bound int_bound = n_bodies->get_bound_SI();
 
 		for (int i = int_bound.sink.x; i < int_bound.sink.y; i++)
@@ -785,26 +809,37 @@ bool pp_disk::check_for_close_encounter(bool inner_steps)
 						events[k].r2 = r[mergerIdx];
 						events[k].v2 = v[mergerIdx];
 
-						sim_data_t* sim_data_copy = new sim_data_t;
-						allocate_host_storage(sim_data_copy, n_bodies->get_n_total());
-
-						for (int i = 0; i < n_bodies->get_n_total(); i++)
+						if (frame_center == FRAME_CENTER_BARY)
 						{
-							sim_data_copy->h_body_md[i] = sim_data->body_md[i];
-							sim_data_copy->h_y[0][i] = r[i];
-							sim_data_copy->h_y[1][i] = v[i];
+							sim_data_t* sim_data_copy = new sim_data_t;
+							allocate_host_storage(sim_data_copy, n_bodies->get_n_total());
+
+							for (int i = 0; i < n_bodies->get_n_total(); i++)
+							{
+								sim_data_copy->body_md[i] = sim_data->body_md[i];
+								sim_data_copy->h_y[0][i] = r[i];
+								sim_data_copy->h_y[1][i] = v[i];
+							}
+
+							transform_to_ac(false, sim_data_copy);
+
+							const vec_t vts = {sim_data_copy->h_y[1][survivIdx].x *constants::Gauss, sim_data_copy->h_y[1][survivIdx].y *constants::Gauss, sim_data_copy->h_y[1][survivIdx].z *constants::Gauss, 0.0};
+							const vec_t vtm = {sim_data_copy->h_y[1][mergerIdx].x *constants::Gauss, sim_data_copy->h_y[1][mergerIdx].y *constants::Gauss, sim_data_copy->h_y[1][mergerIdx].z *constants::Gauss, 0.0};
+
+							tools::calculate_orbital_element(mu1, &events[k].oe1, sim_data_copy->h_y[0][survivIdx], vts);
+							tools::calculate_orbital_element(mu2, &events[k].oe2, sim_data_copy->h_y[0][mergerIdx], vtm);	
+
+							deallocate_host_storage(sim_data_copy);
+							delete sim_data_copy;
 						}
+						else if (frame_center == FRAME_CENTER_ASTRO)
+						{
+							const vec_t vts = {v[survivIdx].x *constants::Gauss, v[survivIdx].y *constants::Gauss, v[survivIdx].z *constants::Gauss, 0.0};
+							const vec_t vtm = {v[mergerIdx].x *constants::Gauss, v[mergerIdx].y *constants::Gauss, v[mergerIdx].z *constants::Gauss, 0.0};
 
-						transform_to_ac(false, sim_data_copy);
-
-						const vec_t vts = {sim_data_copy->h_y[1][survivIdx].x *constants::Gauss, sim_data_copy->h_y[1][survivIdx].y *constants::Gauss, sim_data_copy->h_y[1][survivIdx].z *constants::Gauss, 0.0};
-						const vec_t vtm = {sim_data_copy->h_y[1][mergerIdx].x *constants::Gauss, sim_data_copy->h_y[1][mergerIdx].y *constants::Gauss, sim_data_copy->h_y[1][mergerIdx].z *constants::Gauss, 0.0};
-
-						tools::calculate_orbital_element(mu1, &events[k].oe1, sim_data_copy->h_y[0][survivIdx], vts);
-						tools::calculate_orbital_element(mu2, &events[k].oe2, sim_data_copy->h_y[0][mergerIdx], vtm);	
-
-						deallocate_host_storage(sim_data_copy);
-						delete sim_data_copy;
+							tools::calculate_orbital_element(mu1, &events[k].oe1, r[survivIdx], vts);
+							tools::calculate_orbital_element(mu2, &events[k].oe2, r[mergerIdx], vtm);						
+						}
 						
 						event_counter++;										
 					}
@@ -1161,7 +1196,8 @@ pp_disk::pp_disk(string& path, gas_disk *gd, int n_tpb, bool use_padded_storage,
 	event_counter(0),
 	d_event_counter(0x0),
 	events(0x0),
-	d_events(0x0)
+	d_events(0x0),
+	frame_center(FRAME_CENTER_BARY)
 {
 	for (int i = 0; i < EVENT_COUNTER_NAME_N; i++)
 	{
