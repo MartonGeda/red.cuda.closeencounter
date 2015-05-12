@@ -61,6 +61,8 @@ public:
 	int	n_i_pl;			//!< Number of inactive planetesimal
 	int	n_i_tp;			//!< Number of inactive test particle
 
+	frame_center_t frame_center;
+
 private:
 	int n_tpb;
 	bool ups;

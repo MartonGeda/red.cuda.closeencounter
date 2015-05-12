@@ -203,7 +203,7 @@ pp_disk* options::create_pp_disk()
 		ppd->g_disk->calc(ppd->get_mass_of_star());
 		//ppd->print_result_ascii(cout);
 	}
-	ppd->frame_center = param->frame_center;
+	ppd->frame_center = ppd->n_bodies->frame_center = param->frame_center;
 
 	if (0 == fabs(ppd->sim_data->y[0][0].x) && 0 == fabs(ppd->sim_data->y[0][0].y) && 0 == fabs(ppd->sim_data->y[0][0].z) && 0 == fabs(ppd->sim_data->y[1][0].x) && 0 == fabs(ppd->sim_data->y[1][0].y) && 0 == fabs(ppd->sim_data->y[1][0].z))
 	{

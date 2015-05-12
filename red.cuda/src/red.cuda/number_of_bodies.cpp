@@ -16,7 +16,8 @@ number_of_bodies::number_of_bodies(int n_s, int n_gp, int n_rp, int n_pp, int n_
 		n_pl(n_pl), 
 		n_tp(n_tp),
 		n_tpb(n_tpb),
-		ups(ups)
+		ups(ups),
+		frame_center(FRAME_CENTER_BARY)
 {
 	n_i_s = n_i_gp = n_i_rp = n_i_pp = n_i_spl = n_i_pl = n_i_tp = 0;
     sink.x   = sink.y   = 0;
@@ -196,13 +197,29 @@ interaction_bound number_of_bodies::get_bound_SI()
 {
 	if (ups)
 	{
-		sink.x	 = 0, sink.y   = sink.x + get_n_prime_SI();
-		source.x = 0, source.y = source.x + get_n_prime_massive();
+		if (frame_center == FRAME_CENTER_BARY)
+		{
+			sink.x	 = 0, sink.y   = sink.x + get_n_prime_SI();
+			source.x = 0, source.y = source.x + get_n_prime_massive();
+		}
+		else if (frame_center == FRAME_CENTER_ASTRO)
+		{
+			sink.x	 = 1, sink.y   = get_n_prime_SI();
+			source.x = 1, source.y = get_n_prime_massive();		
+		}
 	}
 	else
 	{
-		sink.x   = 0, sink.y   = sink.x + get_n_SI();
-		source.x = 0, source.y = source.x + get_n_massive();
+		if (frame_center == FRAME_CENTER_BARY)
+		{
+			sink.x   = 0, sink.y   = sink.x + get_n_SI();
+			source.x = 0, source.y = source.x + get_n_massive();
+		}
+		else if (frame_center == FRAME_CENTER_ASTRO)
+		{
+			sink.x   = 1, sink.y   = get_n_SI();
+			source.x = 1, source.y = get_n_massive();
+		}
 	}
 
 	return interaction_bound(sink, source);

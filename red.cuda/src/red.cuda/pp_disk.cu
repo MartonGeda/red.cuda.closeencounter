@@ -403,10 +403,21 @@ void pp_disk::set_kernel_launch_param(int n_data)
 
 void pp_disk::cpu_calc_grav_accel_SI( ttt_t curr_t, interaction_bound int_bound, const body_metadata_t* body_md, const param_t* p, const vec_t* r, const vec_t* v, vec_t* a, event_data_t* events, int *event_counter)
 {
-	// astrocentric ( + 1 )
+	
 	for (int i = int_bound.sink.x; i < int_bound.sink.y; i++)
 	{
-		a[i].x = a[i].y = a[i].z = a[i].w = 0.0;
+		if (frame_center == FRAME_CENTER_BARY)
+		{
+			a[i].x = a[i].y = a[i].z = a[i].w = 0.0;
+		}
+		else if (frame_center == FRAME_CENTER_ASTRO)
+		{
+			const var_t mu = get_mass_of_star() + p[i].mass;		//k^2 is not needed because of the transformation
+			const var_t r2 = SQR(r[i].x) + SQR(r[i].y) + SQR(r[i].z);
+			a[i].x = -mu / (r2*sqrt(r2)) * r[i].x; 
+			a[i].y = -mu / (r2*sqrt(r2)) * r[i].y; 
+			a[i].z = -mu / (r2*sqrt(r2)) * r[i].z;			
+		}
 		if (0 < body_md[i].id)
 		{
 			vec_t dVec = {0.0, 0.0, 0.0, 0.0};
@@ -433,6 +444,15 @@ void pp_disk::cpu_calc_grav_accel_SI( ttt_t curr_t, interaction_bound int_bound,
 				a[i].y += dVec.w * dVec.y;
 				a[i].z += dVec.w * dVec.z;
 
+				if (frame_center == FRAME_CENTER_ASTRO)
+				{
+					const var_t r2 = SQR(r[j].x) + SQR(r[j].y) + SQR(r[j].z);
+
+					a[i].x -= p[j].mass / (r2*sqrt(r2)) * r[j].x;
+					a[i].y -= p[j].mass / (r2*sqrt(r2)) * r[j].y;
+					a[i].z -= p[j].mass / (r2*sqrt(r2)) * r[j].z;				
+				}
+
 				// Check for collision - ignore the star (i > 0 criterium)
 				// The data of the collision will be stored for the body with the greater index (test particles can collide with massive bodies)
 				// If i < j is the condition than test particles can not collide with massive bodies
@@ -444,9 +464,6 @@ void pp_disk::cpu_calc_grav_accel_SI( ttt_t curr_t, interaction_bound int_bound,
 					
 						int survivIdx = i;
 						int mergerIdx = j;
-
-						const var_t mu1 = constants::Gauss2 * (get_mass_of_star() + p[survivIdx].mass);
-						const var_t mu2 = constants::Gauss2 * (get_mass_of_star() + p[mergerIdx].mass);
 
 						//printf prints original times, event stores transformed times
 
@@ -505,6 +522,9 @@ void pp_disk::cpu_calc_grav_accel_SI( ttt_t curr_t, interaction_bound int_bound,
 							//events[k].v1 = vs;
 							//events[k].r2 = rm;
 							//events[k].v2 = vm;
+
+							const var_t mu1 = constants::Gauss2 * (get_mass_of_star() + p[survivIdx].mass);
+							const var_t mu2 = constants::Gauss2 * (get_mass_of_star() + p[mergerIdx].mass);
 
 							if (frame_center == FRAME_CENTER_BARY)
 							{

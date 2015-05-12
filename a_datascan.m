@@ -40,6 +40,15 @@ for i=1:(size(params,1)-1)
 end
 pos(j) = size(params,1);
 
+dpos = zeros(N,1);
+for i=1:size(dpos,1)
+    if i==1
+       dpos(1) = pos(1);
+    else
+       dpos(i) = pos(i) - (pos(i-1)+1) + 1; 
+    end   
+end
+
 for i=1:size(pos,1)
     if i==1
        params(1:pos(1),:) = sortrows(params(1:pos(1),:),1);
@@ -79,6 +88,9 @@ absr1 = sqrt(phase1(:,1).^2 + phase1(:,2).^2 + phase1(:,3).^2);
 absr2 = sqrt(phase2(:,1).^2 + phase2(:,2).^2 + phase2(:,3).^2);
 absv1 = sqrt(phase1(:,4).^2 + phase1(:,5).^2 + phase1(:,6).^2);
 absv2 = sqrt(phase2(:,4).^2 + phase2(:,5).^2 + phase2(:,6).^2);
+dv = sqrt((phase1(:,4) - phase2(:,4)).^2 + (phase1(:,5) - phase2(:,5)).^2 + (phase1(:,6) - phase2(:,6)).^2);
+rtkp = sqrt((phase1(:,1)/2 + phase2(:,1)/2).^2 + (phase1(:,2)/2 + phase2(:,2)/2).^2 + (phase1(:,3)/2 + phase2(:,3)/2).^2);
+
 
 mu1 = 0.01720209895^2*(1+m1);
 mu2 = 0.01720209895^2*(1+m2);
@@ -104,7 +116,14 @@ for i=1:N
    end
 end
 
+fx = 0.01720209895^2 * m1.* m2 ./ d.^3 .* (phase2(:,1) - phase1(:,1));
+fy = 0.01720209895^2 * m1.* m2 ./ d.^3 .* (phase2(:,2) - phase1(:,2));
+fz = 0.01720209895^2 * m1.* m2 ./ d.^3 .* (phase2(:,3) - phase1(:,3));
 fij = 0.01720209895^2 * m1.* m2 ./ d.^2;
+
+fsunx = [0.01720209895^2 * 1.* m1 ./ (phase1(:,1).^3 + phase1(:,2).^3 + phase1(:,3).^3) .* phase1(:,1), 0.01720209895^2 * 1.* m2 ./ (phase2(:,1).^3 + phase2(:,2).^3 + phase2(:,3).^3) .* phase2(:,1)];
+fsuny = [0.01720209895^2 * 1.* m1 ./ (phase1(:,1).^3 + phase1(:,2).^3 + phase1(:,3).^3) .* phase1(:,2), 0.01720209895^2 * 1.* m2 ./ (phase2(:,1).^3 + phase2(:,2).^3 + phase2(:,3).^3) .* phase2(:,2)];
+fsunz = [0.01720209895^2 * 1.* m1 ./ (phase1(:,1).^3 + phase1(:,2).^3 + phase1(:,3).^3) .* phase1(:,3), 0.01720209895^2 * 1.* m2 ./ (phase2(:,1).^3 + phase2(:,2).^3 + phase2(:,3).^3) .* phase2(:,3)];
 fsun = [0.01720209895^2 * 1.* m1 ./ (phase1(:,1).^2 + phase1(:,2).^2 + phase1(:,3).^2), 0.01720209895^2 * 1.* m2 ./ (phase2(:,1).^2 + phase2(:,2).^2 + phase2(:,3).^2)];
 
 %% binary result
@@ -187,7 +206,7 @@ hres = 0.5*absvres.^2 - 0.01720209895^2*(1+mass)./absrres;
 toc;
 %% ascii result
 tic;
-runnum = 3;
+runnum = 4;
 pc_laptop = 'D';            %'D' : pc, 'C' : laptop
 
 currentdir = strcat(pc_laptop,':\Work\ELTE\TDK\red.cuda\TestRun\CloseEncounter\2D\Run_',int2str(runnum),'\');
@@ -231,6 +250,8 @@ for i=1:size(tres,1)
        vzres(i,1:nob) = paramsres((i-1)*nob+1 : i*nob,15);
     end
 end
+
+% TODO: scan masses,densities, radiis
 
 absrres = sqrt(xres.^2 + yres.^2 + zres.^2);
 absvres = sqrt(vxres.^2 + vyres.^2 + vzres.^2);
