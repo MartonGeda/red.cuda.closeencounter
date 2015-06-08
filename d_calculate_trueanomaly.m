@@ -1,20 +1,20 @@
 %% calculate true anomaly, angular coordinate
 
-E01 = zeros(length(params),1);      %initial excentric anomaly from smith formula for body1
-E02 = zeros(length(params),1);      %initial excentric anomaly from smith formula for body2
-E1 = zeros(length(params),1);       %excentric anomaly for body1
-E2 = zeros(length(params),1);       %excentric anomaly for body2
+E01 = zeros(size(params,1),1);      %initial excentric anomaly from smith formula for body1
+E02 = zeros(size(params,1),1);      %initial excentric anomaly from smith formula for body2
+E1 = zeros(size(params,1),1);       %excentric anomaly for body1
+E2 = zeros(size(params,1),1);       %excentric anomaly for body2
 
-H01 = zeros(length(params),1);      %initial hyperbolic anomaly from burkhardt-dunby formula for body1
-H02 = zeros(length(params),1);      %initial hyperbolic anomaly from burkhardt-dunby formula for body2
-H1 = zeros(length(params),1);       %hyperbolic anomaly for body1
-H2 = zeros(length(params),1);       %hyperbolic anomaly for body2
+H01 = zeros(size(params,1),1);      %initial hyperbolic anomaly from burkhardt-dunby formula for body1
+H02 = zeros(size(params,1),1);      %initial hyperbolic anomaly from burkhardt-dunby formula for body2
+H1 = zeros(size(params,1),1);       %hyperbolic anomaly for body1
+H2 = zeros(size(params,1),1);       %hyperbolic anomaly for body2
 
 
-v1 = zeros(length(params),1);       %true anomaly for body1
-v2 = zeros(length(params),1);       %true anomaly for body2
+v1 = zeros(size(params,1),1);       %true anomaly for body1
+v2 = zeros(size(params,1),1);       %true anomaly for body2
 
-for i=1:length(params)
+for i=1:size(params,1)
     if (h1(i) < 0)
         E01(i) = oe1(i,6) + oe1(i,2) * (sin(oe1(i,6))) / (1.0 - sin(oe1(i,6) + oe1(i,2)) + sin(oe1(i,6)));
         err1 = abs(E1(i) - E01(i));

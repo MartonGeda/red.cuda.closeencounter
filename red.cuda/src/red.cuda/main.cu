@@ -229,14 +229,14 @@ int main(int argc, const char** argv, const char** env)
 				{
 					ppd->print_event_data(*event_f, *log_f);
 					ppd->clear_event_counter();
-					if (opt.param->output_type == OUTPUT_TYPE_TEXT)
-					{
-						ppd->print_result_ascii(*result_f);
-					}
-					else
-					{
-						ppd->print_result_binary(*result_f, ppd->t, ppd->sim_data->h_y[0], ppd->sim_data->h_y[1]);
-					}
+					//if (opt.param->output_type == OUTPUT_TYPE_TEXT)
+					//{
+					//	ppd->print_result_ascii(*result_f);
+					//}
+					//else
+					//{
+					//	ppd->print_result_binary(*result_f, ppd->t, ppd->sim_data->h_y[0], ppd->sim_data->h_y[1]);
+					//}
 				}
 			}
 			else if (!opt.param->close_encounter && opt.param->inner_steps)

@@ -6,7 +6,7 @@ savepic = false;
 d_calculate_trueanomaly;
 %d_calculate_angleofintersection;
 
-for i = 1:3
+for i = 1:N
    if i == 1
       ii = 1:pos(1);
       %figure('Name',int2str(i),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);

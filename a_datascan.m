@@ -1,6 +1,8 @@
 %%Close encounter data
 %clear all
 
+gauss2 = 0.01720209895^2;
+
 runnum = 5;
 pc_laptop = 'D';            %'D' : pc, 'C' : laptop
 
@@ -89,11 +91,20 @@ absr2 = sqrt(phase2(:,1).^2 + phase2(:,2).^2 + phase2(:,3).^2);
 absv1 = sqrt(phase1(:,4).^2 + phase1(:,5).^2 + phase1(:,6).^2);
 absv2 = sqrt(phase2(:,4).^2 + phase2(:,5).^2 + phase2(:,6).^2);
 dv = sqrt((phase1(:,4) - phase2(:,4)).^2 + (phase1(:,5) - phase2(:,5)).^2 + (phase1(:,6) - phase2(:,6)).^2);
-rtkp = sqrt((phase1(:,1)/2 + phase2(:,1)/2).^2 + (phase1(:,2)/2 + phase2(:,2)/2).^2 + (phase1(:,3)/2 + phase2(:,3)/2).^2);
 
+absrtkp = sqrt((phase1(:,1)/2 + phase2(:,1)/2).^2 + (phase1(:,2)/2 + phase2(:,2)/2).^2 + (phase1(:,3)/2 + phase2(:,3)/2).^2);
+absvtkp = sqrt((phase1(:,4)/2 + phase2(:,4)/2).^2 + (phase1(:,5)/2 + phase2(:,5)/2).^2 + (phase1(:,6)/2 + phase2(:,6)/2).^2);
 
-mu1 = 0.01720209895^2*(1+m1);
-mu2 = 0.01720209895^2*(1+m2);
+xtkp = phase1(:,1)/2 + phase2(:,1)/2;
+ytkp = phase1(:,2)/2 + phase2(:,2)/2;
+ztkp = phase1(:,3)/2 + phase2(:,3)/2;
+
+vxtkp = phase1(:,4)/2 + phase2(:,4)/2;
+vytkp = phase1(:,5)/2 + phase2(:,5)/2;
+vztkp = phase1(:,6)/2 + phase2(:,6)/2;
+
+mu1 = gauss2*(1+m1);
+mu2 = gauss2*(1+m2);
 
 h1 = 0.5*absv1.^2 - mu1./absr1;
 h2 = 0.5*absv2.^2 - mu2./absr2;
@@ -110,21 +121,21 @@ end
 
 for i=1:N
    if i==1
-       timeofce(i) = t(pos(i)) - t(i);
+       timeofce(1) = t(pos(1)) - t(1);
    else
        timeofce(i) = t(pos(i)) - t(pos(i-1)+1);
    end
 end
 
-fx = 0.01720209895^2 * m1.* m2 ./ d.^3 .* (phase2(:,1) - phase1(:,1));
-fy = 0.01720209895^2 * m1.* m2 ./ d.^3 .* (phase2(:,2) - phase1(:,2));
-fz = 0.01720209895^2 * m1.* m2 ./ d.^3 .* (phase2(:,3) - phase1(:,3));
-fij = 0.01720209895^2 * m1.* m2 ./ d.^2;
+fx = gauss2 * m1.* m2 ./ d.^3 .* (phase2(:,1) - phase1(:,1));
+fy = gauss2 * m1.* m2 ./ d.^3 .* (phase2(:,2) - phase1(:,2));
+fz = gauss2 * m1.* m2 ./ d.^3 .* (phase2(:,3) - phase1(:,3));
+fij = gauss2 * m1.* m2 ./ d.^2;
 
-fsunx = [0.01720209895^2 * 1.* m1 ./ (phase1(:,1).^3 + phase1(:,2).^3 + phase1(:,3).^3) .* phase1(:,1), 0.01720209895^2 * 1.* m2 ./ (phase2(:,1).^3 + phase2(:,2).^3 + phase2(:,3).^3) .* phase2(:,1)];
-fsuny = [0.01720209895^2 * 1.* m1 ./ (phase1(:,1).^3 + phase1(:,2).^3 + phase1(:,3).^3) .* phase1(:,2), 0.01720209895^2 * 1.* m2 ./ (phase2(:,1).^3 + phase2(:,2).^3 + phase2(:,3).^3) .* phase2(:,2)];
-fsunz = [0.01720209895^2 * 1.* m1 ./ (phase1(:,1).^3 + phase1(:,2).^3 + phase1(:,3).^3) .* phase1(:,3), 0.01720209895^2 * 1.* m2 ./ (phase2(:,1).^3 + phase2(:,2).^3 + phase2(:,3).^3) .* phase2(:,3)];
-fsun = [0.01720209895^2 * 1.* m1 ./ (phase1(:,1).^2 + phase1(:,2).^2 + phase1(:,3).^2), 0.01720209895^2 * 1.* m2 ./ (phase2(:,1).^2 + phase2(:,2).^2 + phase2(:,3).^2)];
+fsunx = [gauss2 * 1.* m1 ./ absr1.^3 .* phase1(:,1), gauss2 * 1.* m2 ./ absr2.^3 .* phase2(:,1)];
+fsuny = [gauss2 * 1.* m1 ./ absr1.^3 .* phase1(:,2), gauss2 * 1.* m2 ./ absr2.^3 .* phase2(:,2)];
+fsunz = [gauss2 * 1.* m1 ./ absr1.^3 .* phase1(:,3), gauss2 * 1.* m2 ./ absr2.^3 .* phase2(:,3)];
+fsun = [gauss2 * 1.* m1 ./ absr1.^2, gauss2 * 1.* m2 ./ absr2.^2];
 
 %% binary result
 tic;
@@ -201,12 +212,12 @@ density = density(1:tmp,:);
 
 absrres = sqrt(xres.^2 + yres.^2 + zres.^2);
 absvres = sqrt(vxres.^2 + vyres.^2 + vzres.^2);
-hres = 0.5*absvres.^2 - 0.01720209895^2*(1+mass)./absrres; 
+hres = 0.5*absvres.^2 - gauss2*(1+mass)./absrres; 
 
 toc;
 %% ascii result
 tic;
-runnum = 4;
+runnum = 6;
 pc_laptop = 'D';            %'D' : pc, 'C' : laptop
 
 currentdir = strcat(pc_laptop,':\Work\ELTE\TDK\red.cuda\TestRun\CloseEncounter\2D\Run_',int2str(runnum),'\');
@@ -255,7 +266,7 @@ end
 
 absrres = sqrt(xres.^2 + yres.^2 + zres.^2);
 absvres = sqrt(vxres.^2 + vyres.^2 + vzres.^2);
-hres = 0.5*absvres.^2 - 0.01720209895^2*(1+m1(1))./absrres;     % if masses are not equal it doesn't work!!
+hres = 0.5*absvres.^2 - gauss2*(1+m1(1))./absrres;     % if masses are not equal it doesn't work!!
 toc;
 
 
@@ -286,7 +297,7 @@ end
 [dres, ind]= sort(dres,2);
 
 % ONLY IF THE MASSES ARE EQUAL
-forces = 0.01720209895^2 * m1(1) * m2(1) ./ dres.^2;
+forces = gauss2 * m1(1) * m2(1) ./ dres.^2;
 
 idx = zeros(size(pos,1),2);
 

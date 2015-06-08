@@ -1,6 +1,6 @@
 %% Fit Lorentzian curve to the forces between the bodies
 tic;
-savepic = true;
+savepic = false;
 
 rsquare = zeros(N,1);
 aa = zeros(N,1);
@@ -15,7 +15,7 @@ for i=1:N
    if dpos(i) > 4
        if i == 1
           ii = 1:pos(1);
-          figure('Name',int2str(i),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
+          %figure('Name',int2str(i),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
        else
           ii = pos(i-1)+1:pos(i);    
        end

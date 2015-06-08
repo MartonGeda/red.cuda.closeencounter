@@ -1,21 +1,21 @@
 %% plot pos,vel,cf,oe,(v),ellipses before, ellipses after
 tic;
 % if save == true, then save figures
-savepic = false;
+savepic = true;
 
 d_calculate_trueanomaly;
 %d_calculate_angleofintersection;
 u = linspace(-pi,pi,1000);
 
-for i=1:2
+for i=1:N
    if i == 1
       ii = 1:pos(1);
-      %figure('Name',int2str(i),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
+      figure('Name',int2str(i),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
    else
       ii = pos(i-1)+1:pos(i);    
    end 
  
-    figure('Name',int2str(i),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
+    %figure('Name',int2str(i),'NumberTitle','off','units','normalized','outerposition',[0 0 1 1]);
 
     subplot(3,3,1);
     plot(1.495978707e8 / 86400 * phase1(ii,4),phase1(ii,1),'*',1.495978707e8 / 86400 * phase2(ii,4),phase2(ii,1),'*');
@@ -61,23 +61,35 @@ for i=1:2
     set(gca,'position',p);        
 
     subplot(3,3,4);
-    plot(oe1(ii,2),oe1(ii,1),'*',oe2(ii,2),oe2(ii,1),'*');
-    title('a - e');
-    xlabel('e (-)');
-    ylabel('a (AU)');
-    text(oe1(ii(1),2),oe1(ii(1),1),'   \leftarrow');
-    text(oe2(ii(1),2),oe2(ii(1),1),'\rightarrow   ','HorizontalAlignment','right');
+%     plot(oe1(ii,2),oe1(ii,1),'*',oe2(ii,2),oe2(ii,1),'*');
+%     title('a - e');
+%     xlabel('e (-)');
+%     ylabel('a (AU)');
+    plot(oe1(ii,2).*cos(oe1(ii,4)),oe1(ii,2).*sin(oe1(ii,4)),'*',oe2(ii,2).*cos(oe2(ii,4)),oe2(ii,2).*sin(oe2(ii,4)),'*');
+    title('h - k');
+    xlabel('k (-)');
+    ylabel('h (-)');
+    text(oe1(ii(1),2).*cos(oe1(ii(1),4)),oe1(ii(1),2).*sin(oe1(ii(1),4)),'   \leftarrow');
+    text(oe2(ii(1),2).*cos(oe2(ii(1),4)),oe2(ii(1),2).*sin(oe2(ii(1),4)),'\rightarrow   ','HorizontalAlignment','right');
+%     text(oe1(ii(1),2),oe1(ii(1),1),'   \leftarrow');
+%     text(oe2(ii(1),2),oe2(ii(1),1),'\rightarrow   ','HorizontalAlignment','right');  
     p = get(gca,'position');
     p(1) = p(1) - 0.03;
     set(gca,'position',p);  
 
     subplot(3,3,5);
-    plot(oe1(ii,6),oe1(ii,4),'*',oe2(ii,6),oe2(ii,4),'*');
-    title('w - M');
-    xlabel('M (rad)');
-    ylabel('w (rad)'); 
-    text(oe1(ii(1),6),oe1(ii(1),4),'   \leftarrow');
-    text(oe2(ii(1),6),oe2(ii(1),4),'\rightarrow   ','HorizontalAlignment','right');        
+%     plot(oe1(ii,6),oe1(ii,4),'*',oe2(ii,6),oe2(ii,4),'*');
+%     title('w - M');
+%     xlabel('M (rad)');
+%     ylabel('w (rad)');     
+    plot(oe1(ii,1).*cos(oe1(ii,6)),oe1(ii,1).*sin(oe1(ii,6)),'*',oe2(ii,1).*cos(oe2(ii,6)),oe2(ii,1).*sin(oe2(ii,6)),'*');
+    title('n - m');
+    xlabel('n (AU)');
+    ylabel('m (AU)');
+    text(oe1(ii(1),1).*cos(oe1(ii(1),6)),oe1(ii(1),1).*sin(oe1(ii(1),6)),'   \leftarrow');
+    text(oe2(ii(1),1).*cos(oe2(ii(1),6)),oe2(ii(1),1).*sin(oe2(ii(1),6)),'\rightarrow   ','HorizontalAlignment','right');
+%     text(oe1(ii(1),6),oe1(ii(1),4),'   \leftarrow');
+%     text(oe2(ii(1),6),oe2(ii(1),4),'\rightarrow   ','HorizontalAlignment','right');        
     p = get(gca,'position');
     p(1) = p(1) - 0.03;
     set(gca,'position',p);          
